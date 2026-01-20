@@ -654,5 +654,5 @@ const handleScroll = () => {
 }
 </script>
 <style lang="scss" scoped>
-@import "@/assets/scss/performance-styles.scss";
+@use "@/assets/scss/performance-styles.scss";
 </style>
