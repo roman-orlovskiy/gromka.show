@@ -1,374 +1,658 @@
 <template>
-  <div class="home">
-    <div class="home__carousel">
-      <div class="carousel">
-        <div class="carousel__container">
-          <div
-            v-for="(slide, index) in slides"
-            :key="index"
-            class="carousel__slide"
-            :class="carouselSlideClasses(index)"
-          >
-            <div class="carousel__content">
-              <button
-                class="carousel__button"
-                :class="`carousel__button--${slide.buttonMod}`"
-              >
-                {{ slide.buttonText }}
-              </button>
-              <h3 class="carousel__title">{{ slide.title }}</h3>
-              <p class="carousel__description">{{ slide.description }}</p>
-            </div>
+  <div class="performance">
+    <!-- Hero Section -->
+    <section class="performance__hero">
+      <LanguageSwitcher />
+
+      <h1 class="performance__title">{{ t('performance.title') }}</h1>
+      <p class="performance__subtitle" v-html="subtitleHtml"></p>
+      <div class="performance__hero-video">
+        <video class="performance__video" autoplay loop muted src="/videos/gromka.mp4" type="video/mp4">
+        {{ t('performance.videoNotSupported') }}
+      </video>
+    </div>
+      <button @click="scrollToProject" class="performance__cta-link">
+        <AppButton variant="secondary">{{ t('performance.ctaButton') }}</AppButton>
+      </button>
+    </section>
+
+    <!-- What is it Section -->
+    <section id="what-is-project" class="performance__section performance__section--gradient-1">
+      <div class="performance__container">
+        <div class="performance__content">
+          <div class="performance__text">
+            <p>{{ t('performance.whatIsProject.description') }}</p>
+            <ul class="performance__list">
+              <li>● <strong>{{ t('performance.whatIsProject.features.colorful') }}</strong></li>
+              <li>● <strong>{{ t('performance.whatIsProject.features.dynamic') }}</strong></li>
+              <li>● <strong>{{ t('performance.whatIsProject.features.waves') }}</strong></li>
+            </ul>
+          </div>
+          <div class="performance__image-container">
+            <img
+              src="/images/home/1.webp"
+              :alt="t('performance.whatIsProject.description')"
+              class="performance__image"
+            />
           </div>
         </div>
+      </div>
+    </section>
 
-        <button
-          class="carousel__nav carousel__nav--prev"
-          @click="prevSlide"
-          :disabled="!canNavigate"
-        >
-          ‹
-        </button>
-        <button
-          class="carousel__nav carousel__nav--next"
-          @click="nextSlide"
-          :disabled="!canNavigate"
-        >
-          ›
-        </button>
-
-        <div class="carousel__pagination">
+    <!-- Demo Section -->
+    <section class="performance__section performance__section--demo">
+      <div class="performance__container">
+        <h2 class="performance__section-title">{{ t('performance.demo.title') }}</h2>
+        <p class="performance__demo-description">
+          {{ t('performance.demo.description') }}
+        </p>
+      </div>
+      <div class="performance__video-block">
+        <div class="performance__video-container" @click="toggleVideo2">
+          <video
+            ref="verticalVideo2"
+            class="performance__vertical-video"
+            src="/videos/ai_presentation.mp4"
+            type="video/mp4"
+            loop
+            @play="onVideoPlay2"
+            @pause="onVideoPause2"
+            @ended="onVideoEnded2"
+          >
+            {{ t('performance.videoNotSupported') }}
+          </video>
           <button
-            v-for="(slide, index) in slides"
-            :key="`pagination-${index}`"
-            class="carousel__pagination-bullet"
-            :class="{ 'carousel__pagination-bullet--active': index === currentSlide }"
-            @click="goToSlide(index)"
-          />
+            v-if="!isVideoPlaying2"
+            class="performance__play-button"
+          >
+            {{ videoStarted2 ? t('performance.demo.continue') : t('performance.demo.play') }}
+          </button>
+          <button
+            v-else
+            class="performance__pause-button"
+          >
+            {{ t('performance.demo.pause') }}
+          </button>
+          <button
+            class="performance__fullscreen-button"
+            @click.stop="toggleFullscreen2"
+            :title="t('performance.demo.fullscreen')"
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M8 3H5a2 2 0 0 0-2 2v3m13-5h3a2 2 0 0 1 2 2v3m-5 13h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
         </div>
       </div>
-    </div>
-
-    <h1 class="home__title">Игровые виджеты для вашего сайта</h1>
-    
-    <ul class="home__description">
-      <li class="home__description-item">Легко интегрируйте игровые виджеты на свой сайт</li>
-      <li class="home__description-item">Увеличьте вовлеченность пользователей с помощью интерактивных игр</li>
-      <li class="home__description-item">Простая настройка и быстрый запуск</li>
-    </ul>
-
-    <div class="home__buttons">
-      <button class="home__button home__button--gradient-3">
-        Играть
+      <button @click="openDemoModal" class="performance__demo-link">
+        <AppButton>{{ t('performance.demo.button') }}</AppButton>
       </button>
-      <button class="home__button home__button--gradient-5">
-        Каталог виджетов
-      </button>
-    </div>
+    </section>
+
+    <!-- Stadium Photo Section -->
+    <section class="performance__section performance__section--stadium">
+      <div class="performance__container">
+        <h2 class="performance__section-title">{{ t('performance.stadium.title') }}</h2>
+        <div class="performance__stadium-block">
+          <div class="performance__stadium-preview">
+            <div class="performance__image-container performance__image-container--large performance__image-container--clickable" @click="openSpartakGallery(0)">
+              <img
+                :src="spartakGalleryImages[0]?.src"
+                :alt="spartakGalleryImages[0]?.alt"
+                class="performance__image"
+              />
+              <button class="performance__arrow performance__arrow--left" @click.stop="prevSpartakPhoto">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+              <button class="performance__arrow performance__arrow--right" @click.stop="nextSpartakPhoto">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <div class="performance__stadium-info">
+            <p>{{ t('performance.stadium.description') }}</p>
+          </div>
+        </div>
+        <div class="performance__video-block">
+          <div class="performance__video-container" @click="toggleVideo">
+            <video
+              ref="verticalVideo"
+              class="performance__vertical-video"
+              src="/videos/demo.mp4"
+              type="video/mp4"
+              loop
+              @play="onVideoPlay"
+              @pause="onVideoPause"
+              @ended="onVideoEnded"
+            >
+              {{ t('performance.videoNotSupported') }}
+            </video>
+            <button
+              v-if="!isVideoPlaying"
+              class="performance__play-button"
+            >
+              {{ videoStarted ? t('performance.stadium.continue') : t('performance.stadium.play') }}
+            </button>
+            <button
+              v-else
+              class="performance__pause-button"
+            >
+              {{ t('performance.stadium.pause') }}
+            </button>
+            <button
+              class="performance__fullscreen-button"
+              @click.stop="toggleFullscreen"
+              :title="t('performance.stadium.fullscreen')"
+            >
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M8 3H5a2 2 0 0 0-2 2v3m13-5h3a2 2 0 0 1 2 2v3m-5 13h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+<!-- Advantages Section -->
+    <section class="performance__section performance__section--gradient-2">
+      <div class="performance__container">
+        <h2 class="performance__section-title">{{ t('performance.advantages.title') }}</h2>
+        <div class="performance__grid">
+          <div class="performance__card">
+            <div class="performance__card-icon">▲</div>
+            <h3 class="performance__card-title">{{ t('performance.advantages.scalability.title') }}</h3>
+            <p>{{ t('performance.advantages.scalability.description') }}</p>
+          </div>
+          <div class="performance__card">
+            <div class="performance__card-icon">◆</div>
+            <h3 class="performance__card-title">{{ t('performance.advantages.simplicity.title') }}</h3>
+            <p>{{ t('performance.advantages.simplicity.description') }}</p>
+          </div>
+          <div class="performance__card">
+            <div class="performance__card-icon">★</div>
+            <h3 class="performance__card-title">{{ t('performance.advantages.visual.title') }}</h3>
+            <p>{{ t('performance.advantages.visual.description') }}</p>
+          </div>
+          <div class="performance__card">
+            <div class="performance__card-icon">◉</div>
+            <h3 class="performance__card-title">{{ t('performance.advantages.flexibility.title') }}</h3>
+            <p>{{ t('performance.advantages.flexibility.description') }}</p>
+          </div>
+          <div class="performance__card performance__card--highlighted performance__card--clickable" @click="scrollToMonetization">
+            <div class="performance__card-icon">■</div>
+            <h3 class="performance__card-title">{{ t('performance.advantages.monetization.title') }}</h3>
+            <p>{{ t('performance.advantages.monetization.description') }}</p>
+          </div>
+          <div class="performance__card">
+            <div class="performance__card-icon">●</div>
+            <h3 class="performance__card-title">{{ t('performance.advantages.interaction.title') }}</h3>
+            <p>{{ t('performance.advantages.interaction.description') }}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Monetization Section -->
+    <section id="monetization" class="performance__section performance__section--success">
+      <div class="performance__container">
+        <h2 class="performance__section-title">{{ t('performance.monetization.title') }}</h2>
+        <div class="performance__grid performance__grid--four-cols">
+          <div class="performance__monetization-card">
+            <div class="performance__monetization-icon">◆</div>
+            <h3>{{ t('performance.monetization.specialProjects.title') }}</h3>
+            <p>{{ t('performance.monetization.specialProjects.description') }}</p>
+          </div>
+          <div class="performance__monetization-card">
+            <div class="performance__monetization-icon">◉</div>
+            <h3>{{ t('performance.monetization.advertising.title') }}</h3>
+            <p>{{ t('performance.monetization.advertising.description') }}</p>
+          </div>
+          <div class="performance__monetization-card">
+            <div class="performance__monetization-icon">■</div>
+            <h3>{{ t('performance.monetization.souvenirs.title') }}</h3>
+            <p>{{ t('performance.monetization.souvenirs.description') }}</p>
+          </div>
+          <div class="performance__monetization-card">
+            <div class="performance__monetization-icon">▲</div>
+            <h3>{{ t('performance.monetization.bets.title') }}</h3>
+            <p>{{ t('performance.monetization.bets.description') }}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Target Audience Section -->
+    <section class="performance__section performance__section--gradient-3">
+      <div class="performance__container">
+        <h2 class="performance__section-title">{{ t('performance.targetAudience.title') }}</h2>
+        <div class="performance__grid performance__grid--two-cols">
+          <div class="performance__target-card">
+            <div class="performance__target-icon">♪</div>
+            <h3>{{ t('performance.targetAudience.concerts.title') }}</h3>
+            <p>{{ t('performance.targetAudience.concerts.description') }}</p>
+          </div>
+          <div class="performance__target-card">
+            <div class="performance__target-icon">◈</div>
+            <h3>{{ t('performance.targetAudience.sports.title') }}</h3>
+            <p>{{ t('performance.targetAudience.sports.description') }}</p>
+          </div>
+          <div class="performance__target-card">
+            <div class="performance__target-icon">◐</div>
+            <h3>{{ t('performance.targetAudience.theater.title') }}</h3>
+            <p>{{ t('performance.targetAudience.theater.description') }}</p>
+          </div>
+          <div class="performance__target-card">
+            <div class="performance__target-icon">▶</div>
+            <h3>{{ t('performance.targetAudience.marketing.title') }}</h3>
+            <p>{{ t('performance.targetAudience.marketing.description') }}</p>
+          </div>
+          <div class="performance__target-card">
+            <div class="performance__target-icon">◆</div>
+            <h3>{{ t('performance.targetAudience.political.title') }}</h3>
+            <p>{{ t('performance.targetAudience.political.description') }}</p>
+          </div>
+          <div class="performance__target-card">
+            <div class="performance__target-icon">◉</div>
+            <h3>{{ t('performance.targetAudience.public.title') }}</h3>
+            <p>{{ t('performance.targetAudience.public.description') }}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- What is it like Section -->
+    <section class="performance__section performance__section--gradient-4">
+      <div class="performance__container">
+        <h2 class="performance__section-title">{{ t('performance.comparison.title') }}</h2>
+        <div class="performance__comparison">
+          <div class="performance__comparison-item">
+            <div class="performance__image-container performance__image-container--clickable" @click="openGallery(0)">
+              <img
+                src="/images/home/refs/img1.webp"
+                :alt="t('performance.comparison.lightShows.description')"
+                class="performance__image"
+              />
+            </div>
+            <h3>{{ t('performance.comparison.lightShows.title') }}</h3>
+            <p>{{ t('performance.comparison.lightShows.description') }}</p>
+          </div>
+          <div class="performance__comparison-item">
+            <div class="performance__image-container performance__image-container--clickable" @click="openGallery(1)">
+              <img
+                src="/images/home/refs/img2.webp"
+                :alt="t('performance.comparison.drones.description')"
+                class="performance__image"
+              />
+            </div>
+            <h3>{{ t('performance.comparison.drones.title') }}</h3>
+            <p>{{ t('performance.comparison.drones.description') }}</p>
+          </div>
+          <div class="performance__comparison-item">
+            <div class="performance__image-container performance__image-container--clickable" @click="openGallery(2)">
+              <img
+                src="/images/home/refs/img3.webp"
+                :alt="t('performance.comparison.interactive.description')"
+                class="performance__image performance__image--shifted-up"
+              />
+            </div>
+            <h3>{{ t('performance.comparison.interactive.title') }}</h3>
+            <p>{{ t('performance.comparison.interactive.description') }}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Goal Section -->
+    <section class="performance__section performance__section--accent">
+      <div class="performance__container">
+        <h2 class="performance__section-title">{{ t('performance.goal.title') }}</h2>
+        <div class="performance__goal">
+          <p class="performance__goal-text">
+            {{ t('performance.goal.text') }}
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Team Section -->
+    <section class="performance__section performance__section--primary">
+      <div class="performance__container">
+        <div class="performance__team">
+          <div class="performance__team-item">
+            <div class="performance__team-photo">
+              <img src="/images/home/team/roman-orlovskiy.webp" :alt="t('performance.team.roman.name')" />
+            </div>
+            <h3>{{ t('performance.team.roman.name') }}</h3>
+            <p>{{ t('performance.team.roman.role') }}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="performance__cta">
+      <div class="performance__container">
+        <h2 class="performance__cta-title">{{ t('performance.cta.title') }}</h2>
+        <p class="performance__cta-text">{{ t('performance.cta.text') }}</p>
+        <a href="https://t.me/orlovskiy_rl" target="_blank" class="performance__cta-link">
+          <AppButton>{{ t('performance.cta.button') }}</AppButton>
+        </a>
+      </div>
+    </section>
+
+    <!-- Image Gallery for Spartak -->
+    <ImageGallery
+      :is-open="isSpartakGalleryOpen"
+      :images="spartakGalleryImages"
+      :initial-slide="spartakSlideIndex"
+      @close="closeSpartakGallery"
+    />
+
+    <!-- Image Gallery for Similar Cases -->
+    <ImageGallery
+      :is-open="isGalleryOpen"
+      :images="galleryImages"
+      :initial-slide="currentSlide"
+      @close="closeGallery"
+    />
+
+    <!-- Sticky CTA Button -->
+    <transition name="slide-from-right">
+      <a
+        href="https://t.me/orlovskiy_rl"
+        target="_blank"
+        class="performance__sticky-cta"
+        v-show="showStickyButton"
+        :title="t('performance.cta.stickyButton')"
+      >
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" fill="currentColor"/>
+        </svg>
+      </a>
+    </transition>
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { useRoute } from 'vue-router'
+import { useMainStore } from '@/stores/main'
 
-const currentSlide = ref(0)
-const isAutoplayEnabled = ref(true)
-const canNavigate = ref(true)
-let autoplayInterval = null
+const route = useRoute()
+const mainStore = useMainStore()
+const { t, setLanguage } = useI18n()
 
-const slides = [
-  {
-    buttonText: 'Начать игру',
-    buttonMod: 'gradient-3',
-    title: 'Игровые виджеты',
-    description: 'Увлекательные игры для вашего сайта'
-  },
-  {
-    buttonText: 'Интегрировать',
-    buttonMod: 'gradient-5',
-    title: 'Простая интеграция',
-    description: 'Быстрое внедрение на любой сайт'
-  },
-  {
-    buttonText: 'Узнать больше',
-    buttonMod: 'gradient-4',
-    title: 'Увеличение вовлеченности',
-    description: 'Привлекайте больше пользователей'
-  }
-]
-
-const carouselSlideClasses = computed(() => {
-  return (index) => ({
-    'carousel__slide--active': index === currentSlide.value
-  })
+// Computed для subtitle с жирным текстом
+const subtitleHtml = computed(() => {
+  const subtitle = t('performance.subtitle')
+  const boldText = t('performance.subtitleBold')
+  return subtitle.replace('{{bold}}', `<b>${boldText}</b>`)
 })
 
-const nextSlide = () => {
-  if (!canNavigate.value) return
-  currentSlide.value = (currentSlide.value + 1) % slides.length
-  resetAutoplay()
-}
+// Галерея изображений для Спартака
+const isSpartakGalleryOpen = ref(false)
+const spartakSlideIndex = ref(0)
 
-const prevSlide = () => {
-  if (!canNavigate.value) return
-  currentSlide.value = (currentSlide.value - 1 + slides.length) % slides.length
-  resetAutoplay()
-}
-
-const goToSlide = (index) => {
-  currentSlide.value = index
-  resetAutoplay()
-}
-
-const startAutoplay = () => {
-  if (autoplayInterval) {
-    clearInterval(autoplayInterval)
-  }
-  autoplayInterval = setInterval(() => {
-    if (isAutoplayEnabled.value) {
-      nextSlide()
+const spartakGalleryImages = computed(() => {
+  return [
+    {
+      src: '/images/home/spartak-2.webp',
+      alt: t('performance.stadium.images.spartakRostov'),
+      caption: t('performance.stadium.images.spartakRostov')
+    },
+    {
+      src: '/images/home/spartak.webp',
+      alt: t('performance.stadium.images.spartakRostov'),
+      caption: t('performance.stadium.images.spartakRostov')
+    },
+    {
+      src: '/images/home/spartak-1.webp',
+      alt: t('performance.stadium.images.spartakRostov'),
+      caption: t('performance.stadium.images.spartakRostov')
+    },
+    {
+      src: '/images/home/spartak-3.webp',
+      alt: t('performance.stadium.images.zfkSpartak'),
+      caption: t('performance.stadium.images.zfkSpartak')
     }
-  }, 3000)
+  ]
+})
+
+const openSpartakGallery = (index = 0) => {
+  spartakSlideIndex.value = index
+  isSpartakGalleryOpen.value = true
 }
 
-const resetAutoplay = () => {
-  isAutoplayEnabled.value = false
-  if (autoplayInterval) {
-    clearInterval(autoplayInterval)
+const closeSpartakGallery = () => {
+  isSpartakGalleryOpen.value = false
+}
+
+const nextSpartakPhoto = () => {
+  openSpartakGallery(1)
+}
+
+const prevSpartakPhoto = () => {
+  openSpartakGallery(3)
+}
+
+// Галерея изображений для аналогичных кейсов
+const isGalleryOpen = ref(false)
+const currentSlide = ref(0)
+
+const galleryImages = computed(() => {
+  return [
+    {
+      src: '/images/home/refs/img1.webp',
+      alt: t('performance.comparison.lightShows.description'),
+      caption: t('performance.comparison.lightShows.title') + ' - ' + t('performance.comparison.lightShows.description')
+    },
+    {
+      src: '/images/home/refs/img2.webp',
+      alt: t('performance.comparison.drones.description'),
+      caption: t('performance.comparison.drones.description')
+    },
+    {
+      src: '/images/home/refs/img3.webp',
+      alt: t('performance.comparison.interactive.description'),
+      caption: t('performance.comparison.interactive.description')
+    }
+  ]
+})
+
+const openGallery = (index: number) => {
+  currentSlide.value = index
+  isGalleryOpen.value = true
+}
+
+const closeGallery = () => {
+  isGalleryOpen.value = false
+}
+
+const verticalVideo = ref<HTMLVideoElement | null>(null)
+const isVideoPlaying = ref(false)
+const videoStarted = ref(false)
+
+const verticalVideo2 = ref<HTMLVideoElement | null>(null)
+const isVideoPlaying2 = ref(false)
+const videoStarted2 = ref(false)
+
+const toggleVideo = () => {
+  if (verticalVideo.value) {
+    if (isVideoPlaying.value) {
+      verticalVideo.value.pause()
+      isVideoPlaying.value = false
+    } else {
+      // Останавливаем второе видео, если оно играет
+      if (isVideoPlaying2.value && verticalVideo2.value) {
+        verticalVideo2.value.pause()
+        isVideoPlaying2.value = false
+      }
+      verticalVideo.value.play()
+      isVideoPlaying.value = true
+      videoStarted.value = true
+    }
   }
-  startAutoplay()
-  setTimeout(() => {
-    isAutoplayEnabled.value = true
-  }, 3000)
+}
+
+const toggleVideo2 = () => {
+  if (verticalVideo2.value) {
+    if (isVideoPlaying2.value) {
+      verticalVideo2.value.pause()
+      isVideoPlaying2.value = false
+    } else {
+      // Останавливаем первое видео, если оно играет
+      if (isVideoPlaying.value && verticalVideo.value) {
+        verticalVideo.value.pause()
+        isVideoPlaying.value = false
+      }
+      verticalVideo2.value.play()
+      isVideoPlaying2.value = true
+      videoStarted2.value = true
+    }
+  }
+}
+
+const scrollToProject = () => {
+  const element = document.getElementById('what-is-project')
+  if (element) {
+    element.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start'
+    })
+  }
+}
+
+const toggleFullscreen = () => {
+  if (verticalVideo.value) {
+    verticalVideo.value.classList.add('fullscreen-video')
+
+    if (verticalVideo.value.requestFullscreen) {
+      verticalVideo.value.requestFullscreen()
+    } else if ((verticalVideo.value as any).webkitRequestFullscreen) {
+      (verticalVideo.value as any).webkitRequestFullscreen()
+    } else if ((verticalVideo.value as any).msRequestFullscreen) {
+      (verticalVideo.value as any).msRequestFullscreen()
+    }
+  }
+}
+
+const toggleFullscreen2 = () => {
+  if (verticalVideo2.value) {
+    verticalVideo2.value.classList.add('fullscreen-video')
+
+    if (verticalVideo2.value.requestFullscreen) {
+      verticalVideo2.value.requestFullscreen()
+    } else if ((verticalVideo2.value as any).webkitRequestFullscreen) {
+      (verticalVideo2.value as any).webkitRequestFullscreen()
+    } else if ((verticalVideo2.value as any).msRequestFullscreen) {
+      (verticalVideo2.value as any).msRequestFullscreen()
+    }
+  }
+}
+
+// Обработчик выхода из полноэкранного режима
+const handleFullscreenChange = () => {
+  if (verticalVideo.value && !document.fullscreenElement) {
+    verticalVideo.value.classList.remove('fullscreen-video')
+  }
+  if (verticalVideo2.value && !document.fullscreenElement) {
+    verticalVideo2.value.classList.remove('fullscreen-video')
+  }
 }
 
 onMounted(() => {
-  startAutoplay()
+  document.addEventListener('fullscreenchange', handleFullscreenChange)
+  document.addEventListener('webkitfullscreenchange', handleFullscreenChange)
+  document.addEventListener('msfullscreenchange', handleFullscreenChange)
+  window.addEventListener('scroll', handleScroll)
+  handleScroll() // Проверяем сразу при загрузке
+
+  // Проверяем query параметры для автоматического открытия демо и установки языка
+  const demoParam = route.query.demo
+  const langParam = route.query.lang
+
+  // Устанавливаем язык, если указан в query
+  if (langParam === 'ru' || langParam === 'en') {
+    setLanguage(langParam)
+  }
+
+  // Открываем модальное окно демо, если demo=true
+  if (demoParam === 'true') {
+    // Небольшая задержка для корректной инициализации компонента
+    setTimeout(() => {
+      openDemoModal()
+    }, 100)
+  }
 })
 
 onUnmounted(() => {
-  if (autoplayInterval) {
-    clearInterval(autoplayInterval)
-  }
+  document.removeEventListener('fullscreenchange', handleFullscreenChange)
+  document.removeEventListener('webkitfullscreenchange', handleFullscreenChange)
+  document.removeEventListener('msfullscreenchange', handleFullscreenChange)
+  window.removeEventListener('scroll', handleScroll)
 })
+
+const onVideoPlay = () => {
+  isVideoPlaying.value = true
+  videoStarted.value = true
+}
+
+const onVideoPause = () => {
+  isVideoPlaying.value = false
+}
+
+const onVideoEnded = () => {
+  isVideoPlaying.value = false
+}
+
+const onVideoPlay2 = () => {
+  isVideoPlaying2.value = true
+  videoStarted2.value = true
+}
+
+const onVideoPause2 = () => {
+  isVideoPlaying2.value = false
+}
+
+const onVideoEnded2 = () => {
+  isVideoPlaying2.value = false
+}
+
+const openDemoModal = () => {
+  mainStore.openModal('demo')
+}
+
+const scrollToMonetization = () => {
+  const element = document.getElementById('monetization')
+  if (element) {
+    element.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start'
+    })
+  }
+}
+
+// Sticky CTA button logic
+const showStickyButton = ref(false)
+
+const handleScroll = () => {
+  const whatIsSection = document.getElementById('what-is-project')
+  const ctaSection = document.querySelector('.performance__cta') as HTMLElement | null
+
+  if (whatIsSection && ctaSection) {
+    const whatIsSectionTop = whatIsSection.offsetTop
+    const ctaSectionTop = ctaSection.offsetTop
+    const scrollPosition = window.scrollY + window.innerHeight
+
+    // Показываем кнопку после секции "Что это за проект" и скрываем, когда дошли до секции CTA
+    showStickyButton.value = window.scrollY > whatIsSectionTop && scrollPosition < ctaSectionTop + 100
+  }
+}
 </script>
-
 <style lang="scss" scoped>
-.home {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem;
-  padding-top: 0;
-  height: 100vh;
-  overflow-y: auto;
-  position: relative;
-  color: white;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-
-  &__carousel {
-    width: 100%;
-    max-width: 75rem;
-    margin: 0 auto;
-    padding: 2rem 0;
-  }
-
-  &__title {
-    margin-bottom: 2rem;
-    text-align: center;
-    font-size: 4.4rem;
-    font-weight: bold;
-  }
-
-  &__description {
-    text-align: left;
-    font-size: 2.2rem;
-    line-height: 1.6;
-    margin-bottom: 3rem;
-    padding-left: 10rem;
-    list-style-position: inside;
-
-    &-item {
-      margin-bottom: 0.5rem;
-    }
-  }
-
-  &__buttons {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    margin-top: 2rem;
-  }
-
-  &__button {
-    min-width: 200px;
-    padding: 1rem 2rem;
-    font-size: 1.6rem;
-    font-weight: bold;
-    border: none;
-    border-radius: 0.5rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    color: white;
-
-    &:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-    }
-
-    &--gradient-3 {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    }
-
-    &--gradient-5 {
-      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-    }
-  }
-}
-
-.carousel {
-  position: relative;
-  width: 100%;
-  height: 25rem;
-  border-radius: 0.75rem;
-  overflow: hidden;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-
-  &__container {
-    position: relative;
-    width: 100%;
-    height: 100%;
-  }
-
-  &__slide {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: opacity 0.5s ease;
-    pointer-events: none;
-
-    &--active {
-      opacity: 1;
-      pointer-events: auto;
-    }
-  }
-
-  &__content {
-    text-align: center;
-    padding: 2rem;
-    color: white;
-  }
-
-  &__button {
-    margin-bottom: 2rem;
-    padding: 1rem 2rem;
-    font-size: 1.6rem;
-    font-weight: bold;
-    border: none;
-    border-radius: 0.5rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    color: white;
-
-    &:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-    }
-
-    &--gradient-3 {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    }
-
-    &--gradient-4 {
-      background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
-    }
-
-    &--gradient-5 {
-      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-    }
-  }
-
-  &__title {
-    font-size: 2rem;
-    margin-bottom: 0.5rem;
-    font-weight: bold;
-  }
-
-  &__description {
-    font-size: 1.2rem;
-    opacity: 0.9;
-  }
-
-  &__nav {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background: transparent;
-    border: none;
-    color: white;
-    font-size: 2.5rem;
-    font-weight: bold;
-    width: 3rem;
-    height: 3rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    z-index: 10;
-
-    &:hover:not(:disabled) {
-      color: rgba(255, 255, 255, 0.8);
-      transform: translateY(-50%) scale(1.1);
-    }
-
-    &:disabled {
-      opacity: 0.35;
-      cursor: auto;
-      pointer-events: none;
-    }
-
-    &--prev {
-      left: 1rem;
-    }
-
-    &--next {
-      right: 1rem;
-    }
-  }
-
-  &__pagination {
-    position: absolute;
-    bottom: 1rem;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 0.5rem;
-    z-index: 10;
-
-    &-bullet {
-      width: 0.75rem;
-      height: 0.75rem;
-      border-radius: 50%;
-      background: white;
-      opacity: 0.5;
-      border: none;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      padding: 0;
-
-      &:hover {
-        opacity: 0.8;
-      }
-
-      &--active {
-        opacity: 1;
-        transform: scale(1.2);
-      }
-    }
-  }
-}
+@import "@/assets/scss/performance-styles.scss";
 </style>
