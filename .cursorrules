@@ -1,6 +1,5 @@
 Используй nuxt 4
-Читай документацию по nuxt и nuxt ui и сохрани куда-то себе актуальные данные уже
-Базовые компоненты из @nuxt/ui 4.1.0 https://ui.nuxt.com/docs/components
+Читай документацию по nuxt 4
 Глобальные настройки в stores/settings.ts
 
 В компонентах использовать scss и БЭМ вида block__element--modifier
@@ -21,19 +20,9 @@
 Не предлагай запустить npm run dev или npm run build, я сам это делаю
 Все относящееся к приложению в app/ Не в корне проекта
 
-Не используй UFormGroup, это nuxt ui 2, а мы используем nuxt ui 4
 Глобальную логику выноси в stores
 
-На кнопки UButton всегда добавлять класс cursor-pointer
 Для логики используй DRY KISS SOLID PRINCIPLES
-
-<UAlert 
-  v-if="profileSuccess" 
-  color="green"
-Нельзя использовать цвета вроде green, red и т п
-Цвета для компонент обычно "error" | "primary" | "secondary" | "success" | "info" | "warning" | "neutral"
-
-Читай документацию по компонентам и используй их правильно https://ui.nuxt.com/docs/components
 
 Используй DRY, не копируй код
 
