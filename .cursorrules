@@ -3,6 +3,7 @@
 Глобальные настройки в stores/settings.ts
 
 В компонентах использовать scss и БЭМ вида block__element--modifier
+Для импорта стилей в SCSS используй @use вместо @import (Sass @import deprecated)
 .block {
   &__element {
     &--modifier {
