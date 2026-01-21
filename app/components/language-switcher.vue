@@ -1,50 +1,68 @@
 <template>
-  <button 
-    class="language-switcher"
-    @click="handleToggleLanguage"
-    :title="t('performance.language.switch')"
-  >
-    <span class="language-switcher__text">
-      {{ currentLang === 'ru' ? 'EN' : 'RU' }}
-    </span>
-  </button>
+  <div class="language-switcher">
+    <button 
+      class="language-switcher__button"
+      :class="{ 'language-switcher__button--active': currentLang === 'ru' }"
+      @click="setLang('ru')"
+    >
+      {{ t('language.ru') }}
+    </button>
+    <span class="language-switcher__separator">|</span>
+    <button 
+      class="language-switcher__button"
+      :class="{ 'language-switcher__button--active': currentLang === 'en' }"
+      @click="setLang('en')"
+    >
+      {{ t('language.en') }}
+    </button>
+  </div>
 </template>
 
 <script setup lang="ts">
-const { t, currentLang, toggleLanguage } = useI18n()
+const { t, currentLang, setLanguage } = useI18n()
 
-const handleToggleLanguage = async () => {
-  await toggleLanguage()
+const setLang = async (lang: 'ru' | 'en') => {
+  if (currentLang.value !== lang) {
+    await setLanguage(lang)
+  }
 }
 </script>
 
 <style lang="scss" scoped>
+@use "@/assets/scss/variables.scss" as *;
+
 .language-switcher {
-  position: absolute;
-  top: 2rem;
-  right: 2rem;
-  padding: 1rem 2rem;
-  background: rgba(255, 255, 255, 0.2);
-  border: 2px solid rgba(255, 255, 255, 0.5);
-  border-radius: 0.8rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  z-index: 100;
-
-  &:hover {
-    background: rgba(255, 255, 255, 0.3);
-    transform: scale(1.05);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  
+  &__button {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: $font-weight-bold;
+    color: $color-black;
+    transition: color 0.3s ease;
+    
+    &--active {
+      color: $color-black;
+    }
+    
+    &:not(&--active) {
+      color: $color-gray-400;
+      
+      &:hover {
+        color: $color-gray-600;
+      }
+    }
   }
-
-  &:active {
-    transform: scale(0.95);
-  }
-
-  &__text {
-    font-size: 1.6rem;
-    font-weight: bold;
-    color: white;
-    text-shadow: 0 0.1rem 0.3rem rgba(0, 0, 0, 0.3);
+  
+  &__separator {
+    color: $color-gray-400;
+    font-size: 1rem;
+    user-select: none;
   }
 }
 </style>

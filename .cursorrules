@@ -74,3 +74,7 @@ docker compose exec app npx prisma migrate dev --name add_runner_game_settings
 
 9) После миграций в docker окружении перезапускай app контейнер,
 иначе запущенный сервер может продолжать использовать старый Prisma Client.
+
+10) font-family, font-weight брать из assets/scss/variables.scss
+
+11) Все размеры в rem
