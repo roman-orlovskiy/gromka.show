@@ -112,7 +112,7 @@ onMounted(() => {
   }
   
   &--dark {
-    background: $color-black;
+    background: linear-gradient(to bottom, $color-black, $color-black-dark);
     
     .hero__title {
       color: $color-primary;
