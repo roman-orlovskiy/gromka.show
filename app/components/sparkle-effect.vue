@@ -25,7 +25,7 @@ interface Sparkle {
 
 const sparkles = ref<Sparkle[]>([])
 let sparkleId = 0
-let intervalId: NodeJS.Timeout | null = null
+let intervalId: number | null = null
 
 const createSparkle = () => {
   const newSparkle: Sparkle = {
