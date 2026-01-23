@@ -56,22 +56,22 @@ const { t } = useI18n()
   }
   
   &__title {
-    font-size: 8rem;
+    font-size: 13.444rem; // 242px при базовом 18px
     letter-spacing: 0.05em;
-    margin: 0 0 1rem 0;
     color: $color-black;
   }
   
   &__subtitle {
-    font-size: 2rem;
+    font-size: 1.889rem; // 34px при базовом 18px
     font-weight: $font-weight-medium;
     margin: 0 0 1.5rem 0;
     color: $color-black;
   }
   
   &__description {
-    font-size: 1.25rem;
+    font-size: 1rem;
     font-weight: $font-weight-regular;
+    font-family: $font-inter;
     margin: 0 0 3rem 0;
     max-width: 50rem;
     color: $color-gray-700;

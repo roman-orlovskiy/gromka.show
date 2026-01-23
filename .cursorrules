@@ -78,3 +78,7 @@ docker compose exec app npx prisma migrate dev --name add_runner_game_settings
 10) font-family, font-weight брать из assets/scss/variables.scss
 
 11) Все размеры в rem
+
+12) По умолчанию я передаю размеры в пикселях, исходя из 1rem = 18px
+
+13) Если речь о мобильной верстке, то 1rem = 14px
