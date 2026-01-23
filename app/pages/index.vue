@@ -22,16 +22,15 @@
 
 <script setup lang="ts">
 const { t } = useI18n()
-
-const isDarkTheme = ref(false)
+const settingsStore = useSettingsStore()
 
 const heroClasses = computed(() => ({
-  'hero--dark': isDarkTheme.value
+  'hero--dark': settingsStore.isDarkTheme
 }))
 
 onMounted(() => {
   setTimeout(() => {
-    isDarkTheme.value = true
+    settingsStore.setDarkTheme(true)
   }, 2000)
 })
 </script>
