@@ -1,6 +1,8 @@
 <template>
   <div class="page">
-    <section class="hero">
+    <section class="hero" :class="heroClasses">
+      <SparkleEffect />
+      
       <div class="hero__header">
         <LanguageSwitcher />
       </div>
@@ -20,6 +22,18 @@
 
 <script setup lang="ts">
 const { t } = useI18n()
+
+const isDarkTheme = ref(false)
+
+const heroClasses = computed(() => ({
+  'hero--dark': isDarkTheme.value
+}))
+
+onMounted(() => {
+  setTimeout(() => {
+    isDarkTheme.value = true
+  }, 2000)
+})
 </script>
 
 <style lang="scss" scoped>
@@ -39,12 +53,16 @@ const { t } = useI18n()
   height: 100%;
   background: $color-gray-100;
   overflow: hidden;
+  transition: background 0.6s ease;
+  position: relative;
   
   &__header {
     display: flex;
     justify-content: flex-end;
     padding: 2rem 3rem;
     flex-shrink: 0;
+    position: relative;
+    z-index: 2;
   }
   
   &__content {
@@ -57,6 +75,8 @@ const { t } = useI18n()
     text-align: center;
     gap: 1rem;
     overflow: hidden;
+    position: relative;
+    z-index: 2;
   }
   
   &__title {
@@ -65,6 +85,7 @@ const { t } = useI18n()
     color: $color-black;
     margin: 0 0 1.5rem 0;
     line-height: 1;
+    transition: color 0.6s ease;
   }
   
   &__subtitle {
@@ -72,6 +93,7 @@ const { t } = useI18n()
     font-weight: $font-weight-medium;
     color: $color-black;
     line-height: 1.2;
+    transition: color 0.6s ease;
   }
   
   &__description {
@@ -82,11 +104,28 @@ const { t } = useI18n()
     max-width: 50rem;
     color: $color-gray-700;
     line-height: 1.5;
+    transition: color 0.6s ease;
   }
   
   &__button {
     margin-top: 1rem;
     flex-shrink: 0;
+  }
+  
+  &--dark {
+    background: $color-black;
+    
+    .hero__title {
+      color: $color-primary;
+    }
+    
+    .hero__subtitle {
+      color: $color-white-light;
+    }
+    
+    .hero__description {
+      color: $color-white-light;
+    }
   }
 }
 </style>
