@@ -54,6 +54,7 @@ const getInitialLanguage = (): Language => {
 // Состояние
 const currentLang: Ref<Language> = ref(getInitialLanguage())
 const translationsData: Ref<Record<Language, any>> = ref({} as Record<Language, any>)
+const isTranslationsLoaded: Ref<boolean> = ref(false)
 
 // Загрузка переводов
 const loadTranslations = async (lang: Language): Promise<void> => {
@@ -66,6 +67,7 @@ const loadTranslations = async (lang: Language): Promise<void> => {
       translationsData.value[lang] = enTranslations
     }
   }
+  isTranslationsLoaded.value = true
 }
 
 // Инициализация
@@ -81,9 +83,9 @@ export const useI18n = (): I18nReturn => {
     const keys = key.split('.')
     let value: any = translationsData.value[lang]
     
-    // Если переводы еще не загружены, возвращаем ключ
-    if (!value) {
-      return key
+    // Если переводы еще не загружены, возвращаем пустую строку
+    if (!value || !isTranslationsLoaded.value) {
+      return ''
     }
     
     for (const k of keys) {
