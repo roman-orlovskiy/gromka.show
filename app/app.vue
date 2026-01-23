@@ -7,17 +7,21 @@
 
 <style lang="scss">
 @use "@/assets/scss/fonts.scss";
+@use "@/assets/scss/variables.scss" as *;
 
 html {
-  // Адаптивный размер: используем меньшее из vw или vh для масштабирования
-  // Если ширина > высоты (landscape), ориентируемся на высоту
-  // Если высота > ширины (portrait), ориентируемся на ширину
-  font-size: clamp(10px, min(1.2vw, 1.8vh), 20px);
+  // По умолчанию для широких экранов (landscape) - от высоты
+  font-size: clamp(10px, 1.8vh, 18px);
   min-height: 100%;
   height: 100%;
   margin: 0;
   padding: 0;
   overflow: hidden;
+  
+  // Для узких экранов (aspect ratio < 17:10) - от ширины
+  @include layout-aspect-tablet {
+    font-size: clamp(10px, 1.2vw, 18px);
+  }
 }
 
 body {
