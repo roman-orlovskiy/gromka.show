@@ -29,6 +29,7 @@ const { t } = useI18n()
   width: 100%;
   height: 100%;
   min-height: 100%;
+  overflow: hidden;
 }
 
 .hero {
@@ -36,13 +37,14 @@ const { t } = useI18n()
   flex-direction: column;
   width: 100%;
   height: 100%;
-  min-height: 100vh;
   background: $color-gray-100;
+  overflow: hidden;
   
   &__header {
     display: flex;
     justify-content: flex-end;
     padding: 2rem 3rem;
+    flex-shrink: 0;
   }
   
   &__content {
@@ -53,32 +55,38 @@ const { t } = useI18n()
     flex: 1;
     padding: 2rem;
     text-align: center;
+    gap: 1rem;
+    overflow: hidden;
   }
   
   &__title {
     font-size: 13.444rem; // 242px при базовом 18px
     letter-spacing: 0.05em;
     color: $color-black;
+    margin: 0 0 1.5rem 0;
+    line-height: 1;
   }
   
   &__subtitle {
     font-size: 1.889rem; // 34px при базовом 18px
     font-weight: $font-weight-medium;
-    margin: 0 0 1.5rem 0;
     color: $color-black;
+    line-height: 1.2;
   }
   
   &__description {
     font-size: 1rem;
     font-weight: $font-weight-regular;
     font-family: $font-inter;
-    margin: 0 0 3rem 0;
+    margin: 0;
     max-width: 50rem;
     color: $color-gray-700;
+    line-height: 1.5;
   }
   
   &__button {
-    // Размеры определены в компоненте ui-button
+    margin-top: 1rem;
+    flex-shrink: 0;
   }
 }
 </style>

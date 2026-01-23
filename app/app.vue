@@ -9,11 +9,15 @@
 @use "@/assets/scss/fonts.scss";
 
 html {
-  font-size: clamp(0.875rem, 0.75rem + 0.5vw, 1.125rem);
+  // Адаптивный размер: используем меньшее из vw или vh для масштабирования
+  // Если ширина > высоты (landscape), ориентируемся на высоту
+  // Если высота > ширины (portrait), ориентируемся на ширину
+  font-size: clamp(10px, min(1.2vw, 1.8vh), 20px);
   min-height: 100%;
   height: 100%;
   margin: 0;
   padding: 0;
+  overflow: hidden;
 }
 
 body {
@@ -25,6 +29,7 @@ body {
   font-weight: 500;
   font-size: 1rem;
   line-height: 1.5;
+  overflow: hidden;
 }
 
 #__nuxt {

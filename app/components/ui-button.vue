@@ -53,8 +53,8 @@ const buttonClasses = computed(() => {
   }
   
   &--lg {
-    padding: 1rem 2rem;
-    font-size: 1.125rem;
+    padding: 1.722rem 3.333rem; // 80px высота, 310px ширина при базовом 18px
+    font-size: 1rem;
     border-radius: 1rem;
   }
   
