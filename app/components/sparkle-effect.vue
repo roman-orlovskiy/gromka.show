@@ -6,7 +6,7 @@
       class="sparkle-effect__item"
       :style="sparkle.style"
     >
-      ✧
+      ✦
     </div>
   </div>
 </template>
