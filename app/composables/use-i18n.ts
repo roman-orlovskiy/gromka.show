@@ -1,5 +1,7 @@
 import { computed } from 'vue'
 import type { ComputedRef } from 'vue'
+import ruTranslations from '@/locales/ru'
+import enTranslations from '@/locales/en'
 
 type TranslationKey = string
 type TranslationParams = Record<string, string | number>
@@ -13,7 +15,7 @@ interface I18nReturn {
 }
 
 type Translations = Record<string, any>
-type TranslationsByLang = Record<Language, Translations | null>
+type TranslationsByLang = Record<Language, Translations>
 
 const isLanguage = (value: unknown): value is Language => value === 'ru' || value === 'en'
 
@@ -42,29 +44,16 @@ export const useI18n = (): I18nReturn => {
     langCookie.value = urlLang
   }
 
-  // Переводы грузим на сервере тоже, чтобы SSR не отдавал пустые строки.
-  const translationsData = useState<TranslationsByLang>('i18n.translations', () => ({
-    ru: null,
-    en: null
-  }))
-
-  const { data } = useAsyncData(
-    'i18n.translations',
-    async () => {
-      const [ru, en] = await Promise.all([import('@/locales/ru'), import('@/locales/en')])
-      return { ru: ru.default as Translations, en: en.default as Translations }
-    },
-    { server: true, lazy: false }
-  )
-
-  if (data.value) {
-    translationsData.value = data.value
+  // Переводы должны быть доступны синхронно на SSR,
+  // иначе получаем hydration mismatch (сервер рендерит пустые строки).
+  const translationsData: TranslationsByLang = {
+    ru: ruTranslations as unknown as Translations,
+    en: enTranslations as unknown as Translations
   }
 
   const t = (key: TranslationKey, params: TranslationParams = {}): string => {
     const lang = currentLang.value
-    const dict = translationsData.value[lang]
-    if (!dict) return ''
+    const dict = translationsData[lang]
 
     const keys = key.split('.')
     let value: any = dict
