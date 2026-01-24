@@ -1,6 +1,10 @@
 <template>
   <div class="page" @wheel.passive="handleScroll">
-    <Transition :name="viewTransitionName" mode="out-in">
+    <Transition
+      :name="viewTransitionName"
+      mode="out-in"
+      @after-enter="handleAfterEnter"
+    >
       <component :is="activeComponent" :key="activeViewId" v-bind="activeProps" />
     </Transition>
   </div>
@@ -21,6 +25,7 @@ const heroPhase = ref(0)
 
 let isAnimating = false
 const lastNavDirection = ref<'down' | 'up'>('down')
+const pendingEnterViewId = ref<ViewId | null>(null)
 
 const handleScroll = (event: WheelEvent) => {
   if (Math.abs(event.deltaY) < 8) return
@@ -46,25 +51,66 @@ const activeProps = computed(() => {
   return {}
 })
 
-const heroPhaseSequence = [0, 1, 2] as const
-const heroPhaseStepDelayMs = 300
-const heroAfterLastStepMs = 650
+type PhaseTimeline = ReadonlyArray<number>
 
-const animateHero = async (direction: 'down' | 'up') => {
-  // Вниз: 0 -> 1 -> 2 (уход)
-  // Вверх: 2 -> 1 -> 0 (приход)
-  const sequence = direction === 'down' ? [...heroPhaseSequence] : [...heroPhaseSequence].reverse()
+type ViewConfig = {
+  id: ViewId
+  timeline?: {
+    phase: Ref<number>
+    sequence: PhaseTimeline
+    stepDelayMs: number
+    afterLastStepMs: number
+  }
+}
+
+const views: ViewConfig[] = [
+  {
+    id: 'hero',
+    timeline: {
+      phase: heroPhase,
+      sequence: [0, 1, 2],
+      stepDelayMs: 300,
+      afterLastStepMs: 650
+    }
+  },
+  { id: 'next' }
+]
+
+const getView = (id: ViewId) => views.find(v => v.id === id)
+
+const playTimeline = async (timeline: NonNullable<ViewConfig['timeline']>, direction: 'forward' | 'reverse') => {
+  const sequence = direction === 'forward' ? [...timeline.sequence] : [...timeline.sequence].reverse()
   const steps = sequence.slice(1)
 
   for (const step of steps) {
-    heroPhase.value = step
+    timeline.phase.value = step
     if (step !== steps[steps.length - 1]) {
-      await delay(heroPhaseStepDelayMs)
+      await delay(timeline.stepDelayMs)
     }
   }
 
-  // даём последней анимации доиграть
-  await delay(heroAfterLastStepMs)
+  await delay(timeline.afterLastStepMs)
+}
+
+const prepareEnter = (viewId: ViewId) => {
+  const view = getView(viewId)
+  const timeline = view?.timeline
+  if (!timeline) return
+  const last = timeline.sequence[timeline.sequence.length - 1]
+  if (typeof last === 'number') timeline.phase.value = last
+}
+
+const playExit = async (viewId: ViewId) => {
+  const timeline = getView(viewId)?.timeline
+  if (!timeline) return
+  await playTimeline(timeline, 'forward')
+}
+
+const playEnter = async (viewId: ViewId) => {
+  const timeline = getView(viewId)?.timeline
+  if (!timeline) return
+  // enter = exit в обратном порядке (через reverse массива)
+  await playTimeline(timeline, 'reverse')
 }
 
 const runScroll = async (direction: 'down' | 'up') => {
@@ -72,26 +118,36 @@ const runScroll = async (direction: 'down' | 'up') => {
   isAnimating = true
 
   if (direction === 'down') {
-    if (activeViewId.value === 'hero') {
-      await animateHero('down')
-      const nextIndex = Math.min(activeIndex.value + 1, viewOrder.length - 1)
-      activeViewId.value = viewOrder[nextIndex]!
+    // уход с текущего слайда (если есть внутренние анимации)
+    await playExit(activeViewId.value)
+
+    const nextIndex = Math.min(activeIndex.value + 1, viewOrder.length - 1)
+    const next = viewOrder[nextIndex]!
+    if (next !== activeViewId.value) {
+      pendingEnterViewId.value = next
+      activeViewId.value = next
     }
   } else {
     if (activeIndex.value > 0) {
-      // Возврат на предыдущий view: сбрасываем локальное состояние
       const prev = viewOrder[activeIndex.value - 1]!
+      // Подготавливаем "скрытое" состояние ДО монтирования (важно при mode="out-in")
+      prepareEnter(prev)
+      pendingEnterViewId.value = prev
       activeViewId.value = prev
-      if (prev === 'hero') {
-        // Приход: стартуем "спрятанным" и проигрываем в обратном порядке
-        heroPhase.value = 2
-        await delay(0)
-        await animateHero('up')
-      }
     }
   }
 
-  // небольшой антидребезг
+  // `isAnimating` снимаем в `handleAfterEnter`,
+  // чтобы enter-анимации точно отыгрывали после монтирования.
+}
+
+const handleAfterEnter = async () => {
+  if (pendingEnterViewId.value && pendingEnterViewId.value === activeViewId.value) {
+    const viewId = pendingEnterViewId.value
+    pendingEnterViewId.value = null
+    await playEnter(viewId)
+  }
+
   await delay(250)
   isAnimating = false
 }
