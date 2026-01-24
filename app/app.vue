@@ -8,6 +8,7 @@
 <style lang="scss">
 @use "@/assets/scss/fonts.scss";
 @use "@/assets/scss/variables.scss" as *;
+@use "@/assets/scss/transitions.scss";
 
 html {
   // По умолчанию для широких экранов (landscape) - от высоты
