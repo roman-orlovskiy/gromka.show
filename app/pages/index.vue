@@ -51,15 +51,16 @@ const activeProps = computed(() => {
   return {}
 })
 
-type PhaseTimeline = ReadonlyArray<number>
+type TimelineStep = {
+  phase: number
+  delayAfterMs: number
+}
 
 type ViewConfig = {
   id: ViewId
   timeline?: {
     phase: Ref<number>
-    sequence: PhaseTimeline
-    stepDelayMs: number
-    afterLastStepMs: number
+    steps: ReadonlyArray<TimelineStep>
   }
 }
 
@@ -68,9 +69,16 @@ const views: ViewConfig[] = [
     id: 'hero',
     timeline: {
       phase: heroPhase,
-      sequence: [0, 1, 2],
-      stepDelayMs: 300,
-      afterLastStepMs: 650
+      // 0: всё видно
+      // 1: прячем title
+      // 2: прячем text-block
+      // 3: прячем button (fade)
+      steps: [
+        { phase: 0, delayAfterMs: 0 },
+        { phase: 1, delayAfterMs: 250 },
+        { phase: 2, delayAfterMs: 400 },
+        { phase: 3, delayAfterMs: 400 }
+      ]
     }
   },
   { id: 'next' }
@@ -78,26 +86,27 @@ const views: ViewConfig[] = [
 
 const getView = (id: ViewId) => views.find(v => v.id === id)
 
-const playTimeline = async (timeline: NonNullable<ViewConfig['timeline']>, direction: 'forward' | 'reverse') => {
-  const sequence = direction === 'forward' ? [...timeline.sequence] : [...timeline.sequence].reverse()
-  const steps = sequence.slice(1)
+const playTimeline = async (
+  timeline: NonNullable<ViewConfig['timeline']>,
+  direction: 'forward' | 'reverse'
+) => {
+  const steps = direction === 'forward' ? [...timeline.steps] : [...timeline.steps].reverse()
 
-  for (const step of steps) {
-    timeline.phase.value = step
-    if (step !== steps[steps.length - 1]) {
-      await delay(timeline.stepDelayMs)
+  // первый шаг — это базовое состояние, проигрываем со второго
+  for (const step of steps.slice(1)) {
+    timeline.phase.value = step.phase
+    if (step.delayAfterMs > 0) {
+      await delay(step.delayAfterMs)
     }
   }
-
-  await delay(timeline.afterLastStepMs)
 }
 
 const prepareEnter = (viewId: ViewId) => {
   const view = getView(viewId)
   const timeline = view?.timeline
   if (!timeline) return
-  const last = timeline.sequence[timeline.sequence.length - 1]
-  if (typeof last === 'number') timeline.phase.value = last
+  const last = timeline.steps[timeline.steps.length - 1]
+  if (last) timeline.phase.value = last.phase
 }
 
 const playExit = async (viewId: ViewId) => {
@@ -148,7 +157,7 @@ const handleAfterEnter = async () => {
     await playEnter(viewId)
   }
 
-  await delay(250)
+  await delay(208)
   isAnimating = false
 }
 

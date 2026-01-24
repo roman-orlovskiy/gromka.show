@@ -7,18 +7,14 @@
     </div>
 
     <div class="home-hero__content">
-      <Transition name="fade-up">
-        <h1 v-if="isTitleVisible" class="home-hero__title">{{ t('hero.title') }}</h1>
-      </Transition>
+      <h1 class="home-hero__title" :class="titleClasses">{{ t('hero.title') }}</h1>
 
-      <Transition name="fade-up">
-        <div v-if="isTextBlockVisible" class="home-hero__text-block">
-          <h2 class="home-hero__subtitle">{{ t('hero.subtitle') }}</h2>
-          <p class="home-hero__description">{{ t('hero.description') }}</p>
-        </div>
-      </Transition>
+      <div class="home-hero__text-block" :class="textBlockClasses">
+        <h2 class="home-hero__subtitle">{{ t('hero.subtitle') }}</h2>
+        <p class="home-hero__description">{{ t('hero.description') }}</p>
+      </div>
 
-      <UiButton size="lg" class="home-hero__button">
+      <UiButton size="lg" class="home-hero__button" :class="buttonClasses">
         {{ t('hero.button') }}
       </UiButton>
     </div>
@@ -37,8 +33,17 @@ const heroClasses = computed(() => ({
   'home-hero--dark': settingsStore.isDarkTheme
 }))
 
-const isTitleVisible = computed(() => props.phase < 1)
-const isTextBlockVisible = computed(() => props.phase < 2)
+const titleClasses = computed(() => ({
+  'home-hero__title--hidden': props.phase >= 1
+}))
+
+const textBlockClasses = computed(() => ({
+  'home-hero__text-block--hidden': props.phase >= 2
+}))
+
+const buttonClasses = computed(() => ({
+  'home-hero__button--hidden': props.phase >= 3
+}))
 </script>
 
 <style lang="scss" scoped>
@@ -51,8 +56,19 @@ const isTextBlockVisible = computed(() => props.phase < 2)
   height: 100%;
   background: $color-gray-100;
   overflow: hidden;
-  transition: background 0.6s ease;
   position: relative;
+
+  // Градиенты не анимируются через `transition: background`,
+  // поэтому делаем фоновый слой и анимируем opacity.
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, $color-black, $color-black-dark);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+  }
 
   &__header {
     display: flex;
@@ -83,13 +99,31 @@ const isTextBlockVisible = computed(() => props.phase < 2)
     color: $color-black;
     margin: 0 0 1.5rem 0;
     line-height: 1;
-    transition: color 0.6s ease;
+    transition: color 0.5s ease,
+      opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+      transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: opacity, transform;
+
+    &--hidden {
+      opacity: 0;
+      transform: translateY(-3rem);
+      pointer-events: none;
+    }
   }
 
   &__text-block {
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+      transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: opacity, transform;
+
+    &--hidden {
+      opacity: 0;
+      transform: translateY(-3rem);
+      pointer-events: none;
+    }
   }
 
   &__subtitle {
@@ -97,7 +131,7 @@ const isTextBlockVisible = computed(() => props.phase < 2)
     font-weight: $font-weight-medium;
     color: $color-black;
     line-height: 1.2;
-    transition: color 0.6s ease;
+    transition: color 0.5s ease;
   }
 
   &__description {
@@ -108,16 +142,25 @@ const isTextBlockVisible = computed(() => props.phase < 2)
     max-width: 50rem;
     color: $color-gray-700;
     line-height: 1.5;
-    transition: color 0.6s ease;
+    transition: color 0.5s ease;
   }
 
   &__button {
     margin-top: 1rem;
     flex-shrink: 0;
+    transition: opacity 0.292s ease;
+    will-change: opacity;
+
+    &--hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
   }
 
   &--dark {
-    background: linear-gradient(to bottom, $color-black, $color-black-dark);
+    &::before {
+      opacity: 1;
+    }
 
     .home-hero__title {
       color: $color-primary;
