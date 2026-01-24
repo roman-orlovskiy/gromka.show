@@ -82,3 +82,5 @@ docker compose exec app npx prisma migrate dev --name add_runner_game_settings
 12) По умолчанию я передаю размеры в пикселях, исходя из 1rem = 18px
 
 13) Если речь о мобильной верстке, то 1rem = 14px
+
+14) Все тексты передаются через i18n

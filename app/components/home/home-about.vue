@@ -1,7 +1,7 @@
 <template>
   <section class="home-about">
     <div class="home-about__content">
-      <h2 class="home-about__title">Что такое Gromka?</h2>
+      <h2 class="home-about__title">{{ t('about.title') }}</h2>
 
       <div class="home-about__video-wrap">
         <video
@@ -16,6 +16,8 @@
           preload="metadata"
         />
       </div>
+
+      <p class="home-about__description" v-html="t('about.description')" />
     </div>
   </section>
 </template>
@@ -23,6 +25,7 @@
 <script setup lang="ts">
 import { GROMKA_STORAGE_BASE_URL } from '@/constants/storage'
 
+const { t } = useI18n()
 const aboutVideoUrl = computed(() => `${GROMKA_STORAGE_BASE_URL}about-project.mp4`)
 </script>
 
@@ -58,7 +61,7 @@ const aboutVideoUrl = computed(() => `${GROMKA_STORAGE_BASE_URL}about-project.mp
   &__video-wrap {
     position: relative;
     width: 100%;
-    max-width: 41.778rem; // 752px при базовом 18px
+    max-width: 50.134rem; // 752px * 1.2 = 902.4px при базовом 18px
     border-radius: 1.333rem;
     overflow: hidden;
     background: $color-black-dark;
@@ -79,6 +82,17 @@ const aboutVideoUrl = computed(() => `${GROMKA_STORAGE_BASE_URL}about-project.mp
     height: 100%;
     object-fit: cover;
     display: block;
+  }
+
+  &__description {
+    margin: 0;
+    font-size: 1.5rem; // 18px
+    font-family: $font-inter;
+    font-weight: $font-weight-regular;
+    color: $color-white;
+    line-height: 1.6;
+    width: 100%;
+    max-width: 50.134rem; // совпадает с шириной видео
   }
 }
 </style>
