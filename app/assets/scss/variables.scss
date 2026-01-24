@@ -33,6 +33,8 @@ $color-primary: #FF00B6;
 $color-primary-light: #FF66D4;
 $color-primary-dark: #CC0092;
 
+$color-secondary: #88FFF6;
+
 /* Responsive breakpoints */
 @mixin layout-aspect-tablet() {
   @media (max-aspect-ratio: 17/10) {

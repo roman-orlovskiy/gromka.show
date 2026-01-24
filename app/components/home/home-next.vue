@@ -49,8 +49,8 @@ const aboutVideoUrl = computed(() => `${GROMKA_STORAGE_BASE_URL}about-project.mp
 
   &__title {
     margin: 0;
-    font-size: 2.444rem; // 44px
-    color: $color-black;
+    font-size: 2.7rem; // 44px
+    color: $color-primary;
     font-weight: $font-weight-medium;
     font-family: $font-default;
   }
