@@ -1,9 +1,5 @@
 <template>
   <section class="home-hero" :class="heroClasses">
-    <div class="home-hero__header">
-      <LanguageSwitcher />
-    </div>
-
     <div class="home-hero__content">
       <h1 class="home-hero__title" :class="titleClasses">{{ t('hero.title') }}</h1>
 
@@ -54,15 +50,6 @@ const buttonClasses = computed(() => ({
   height: 100%;
   overflow: hidden;
   position: relative;
-
-  &__header {
-    display: flex;
-    justify-content: flex-end;
-    padding: 2rem 3rem;
-    flex-shrink: 0;
-    position: relative;
-    z-index: 2;
-  }
 
   &__content {
     display: flex;

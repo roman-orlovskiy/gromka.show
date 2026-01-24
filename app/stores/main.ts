@@ -24,11 +24,19 @@ export const useMainStore = defineStore('main', () => {
     modalParams.value = {}
   }
 
+  // Текущий активный слайд (для синхронизации с хедером)
+  const activeViewId: Ref<string> = ref('hero')
+  const setActiveViewId = (viewId: string): void => {
+    activeViewId.value = viewId
+  }
+
   return {
     modalType,
     modalParams,
     isModalOpen,
     openModal,
-    closeModal
+    closeModal,
+    activeViewId,
+    setActiveViewId
   }
 })

@@ -15,11 +15,18 @@ import HomeHero from '@/components/home/home-hero.vue'
 import HomeAbout from '@/components/home/home-about.vue'
 import { delay } from '@/utils/delay'
 
+const mainStore = useMainStore()
+
 const viewOrder = ['hero', 'about'] as const
 type ViewId = (typeof viewOrder)[number]
 
 const activeViewId = ref<ViewId>(viewOrder[0])
 const heroPhase = ref(0)
+
+// Синхронизация activeViewId со стором для хедера
+watch(activeViewId, (newViewId) => {
+  mainStore.setActiveViewId(newViewId)
+}, { immediate: true })
 
 let isAnimating = false
 const lastNavDirection = ref<'down' | 'up'>('down')

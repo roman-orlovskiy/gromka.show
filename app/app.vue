@@ -2,6 +2,7 @@
   <div class="app-root">
     <NuxtRouteAnnouncer />
     <AppBackground />
+    <AppHeader />
     <div class="app-root__content">
       <NuxtPage />
     </div>
@@ -10,6 +11,7 @@
 
 <script setup lang="ts">
 import AppBackground from '@/components/app-background.vue'
+import AppHeader from '@/components/app-header.vue'
 
 const settingsStore = useSettingsStore()
 
