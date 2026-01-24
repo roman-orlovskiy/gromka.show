@@ -124,6 +124,8 @@ const runScroll = async (direction: 'down' | 'up') => {
   if (isAnimating) return
   isAnimating = true
 
+  let willChangeView = false
+
   if (direction === 'down') {
     // уход с текущего слайда (если есть внутренние анимации)
     await playExit(activeViewId.value)
@@ -133,6 +135,7 @@ const runScroll = async (direction: 'down' | 'up') => {
     if (next !== activeViewId.value) {
       pendingEnterViewId.value = next
       activeViewId.value = next
+      willChangeView = true
     }
   } else {
     if (activeIndex.value > 0) {
@@ -141,10 +144,17 @@ const runScroll = async (direction: 'down' | 'up') => {
       prepareEnter(prev)
       pendingEnterViewId.value = prev
       activeViewId.value = prev
+      willChangeView = true
     }
   }
 
-  // `isAnimating` снимаем в `handleAfterEnter`,
+  // Если слайд не меняется (уже на краю), `@after-enter` не сработает,
+  // поэтому сбрасываем флаг сразу.
+  if (!willChangeView) {
+    isAnimating = false
+  }
+
+  // Иначе `isAnimating` снимаем в `handleAfterEnter`,
   // чтобы enter-анимации точно отыгрывали после монтирования.
 }
 
