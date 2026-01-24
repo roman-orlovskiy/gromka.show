@@ -83,7 +83,7 @@ const switcherClasses = computed(() => ({
 
   &--dark {
     .app-header__logo {
-      color: $color-primary;
+      color: $color-white;
     }
   }
 }
