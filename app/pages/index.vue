@@ -160,7 +160,7 @@ const handleAfterEnter = async () => {
 }
 
 // Фон/тема переключаются глобально в `app/app.vue`
-
+</script>
 <style lang="scss" scoped>
 @use "@/assets/scss/variables.scss" as *;
 
