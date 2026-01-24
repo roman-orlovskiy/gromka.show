@@ -12,10 +12,10 @@
 
 <script setup lang="ts">
 import HomeHero from '@/components/home/home-hero.vue'
-import HomeNext from '@/components/home/home-next.vue'
+import HomeAbout from '@/components/home/home-about.vue'
 import { delay } from '@/utils/delay'
 
-const viewOrder = ['hero', 'next'] as const
+const viewOrder = ['hero', 'about'] as const
 type ViewId = (typeof viewOrder)[number]
 
 const activeViewId = ref<ViewId>(viewOrder[0])
@@ -41,7 +41,7 @@ const viewTransitionName = computed(() => (lastNavDirection.value === 'down' ? '
 
 const activeComponent = computed(() => {
   if (activeViewId.value === 'hero') return HomeHero
-  return HomeNext
+  return HomeAbout
 })
 
 const activeProps = computed(() => {
@@ -79,7 +79,7 @@ const views: ViewConfig[] = [
       ]
     }
   },
-  { id: 'next' }
+  { id: 'about' }
 ]
 
 const getView = (id: ViewId) => views.find(v => v.id === id)

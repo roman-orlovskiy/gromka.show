@@ -1,11 +1,11 @@
 <template>
-  <section class="home-next">
-    <div class="home-next__content">
-      <h2 class="home-next__title">Что такое Gromka?</h2>
+  <section class="home-about">
+    <div class="home-about__content">
+      <h2 class="home-about__title">Что такое Gromka?</h2>
 
-      <div class="home-next__video-wrap">
+      <div class="home-about__video-wrap">
         <video
-          class="home-next__video"
+          class="home-about__video"
           :src="aboutVideoUrl"
           autoplay
           muted
@@ -29,7 +29,7 @@ const aboutVideoUrl = computed(() => `${GROMKA_STORAGE_BASE_URL}about-project.mp
 <style lang="scss" scoped>
 @use "@/assets/scss/variables.scss" as *;
 
-.home-next {
+.home-about {
   width: 100%;
   height: 100%;
   display: flex;
@@ -82,4 +82,3 @@ const aboutVideoUrl = computed(() => `${GROMKA_STORAGE_BASE_URL}about-project.mp
   }
 }
 </style>
-
