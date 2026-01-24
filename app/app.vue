@@ -1,9 +1,24 @@
 <template>
   <div class="app-root">
     <NuxtRouteAnnouncer />
-    <NuxtPage />
+    <AppBackground />
+    <div class="app-root__content">
+      <NuxtPage />
+    </div>
   </div>
 </template>
+
+<script setup lang="ts">
+import AppBackground from '@/components/app-background.vue'
+
+const settingsStore = useSettingsStore()
+
+onMounted(() => {
+  setTimeout(() => {
+    settingsStore.setDarkTheme(true)
+  }, 2000)
+})
+</script>
 
 <style lang="scss">
 @use "@/assets/scss/fonts.scss";
@@ -47,5 +62,12 @@ body {
   min-height: 100%;
   height: 100%;
   width: 100%;
+
+  &__content {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+  }
 }
 </style>

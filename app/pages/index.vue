@@ -15,8 +15,6 @@ import HomeHero from '@/components/home/home-hero.vue'
 import HomeNext from '@/components/home/home-next.vue'
 import { delay } from '@/utils/delay'
 
-const settingsStore = useSettingsStore()
-
 const viewOrder = ['hero', 'next'] as const
 type ViewId = (typeof viewOrder)[number]
 
@@ -161,11 +159,7 @@ const handleAfterEnter = async () => {
   isAnimating = false
 }
 
-onMounted(() => {
-  setTimeout(() => {
-    settingsStore.setDarkTheme(true)
-  }, 2000)
-})
+// Фон/тема переключаются глобально в `app/app.vue`
 </script>
 
 <style lang="scss" scoped>

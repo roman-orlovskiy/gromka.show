@@ -1,7 +1,5 @@
 <template>
   <section class="home-hero" :class="heroClasses">
-    <SparkleEffect />
-
     <div class="home-hero__header">
       <LanguageSwitcher />
     </div>
@@ -54,21 +52,8 @@ const buttonClasses = computed(() => ({
   flex-direction: column;
   width: 100%;
   height: 100%;
-  background: $color-gray-100;
   overflow: hidden;
   position: relative;
-
-  // Градиенты не анимируются через `transition: background`,
-  // поэтому делаем фоновый слой и анимируем opacity.
-  &::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to bottom, $color-black, $color-black-dark);
-    opacity: 0;
-    transition: opacity 0.5s ease;
-    pointer-events: none;
-  }
 
   &__header {
     display: flex;
@@ -158,10 +143,6 @@ const buttonClasses = computed(() => ({
   }
 
   &--dark {
-    &::before {
-      opacity: 1;
-    }
-
     .home-hero__title {
       color: $color-primary;
     }
