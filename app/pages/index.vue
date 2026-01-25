@@ -36,7 +36,6 @@ const pendingEnterViewId = ref<ViewId | null>(null)
 const handleScroll = (event: WheelEvent) => {
   if (Math.abs(event.deltaY) < 8) return
   const direction: 'down' | 'up' = event.deltaY > 0 ? 'down' : 'up'
-  lastNavDirection.value = direction
   void runScroll(direction)
 }
 
@@ -159,6 +158,8 @@ const runScroll = async (direction: 'down' | 'up') => {
     const nextIndex = Math.min(activeIndex.value + 1, viewOrder.length - 1)
     const next = viewOrder[nextIndex]!
     if (next !== activeViewId.value) {
+      // Направление определяем строго по индексу: растёт -> вниз, падает -> вверх
+      lastNavDirection.value = nextIndex > activeIndex.value ? 'down' : 'up'
       pendingEnterViewId.value = next
       activeViewId.value = next
       willChangeView = true
@@ -168,6 +169,7 @@ const runScroll = async (direction: 'down' | 'up') => {
       const prev = viewOrder[activeIndex.value - 1]!
       // Подготавливаем "скрытое" состояние ДО монтирования (важно при mode="out-in")
       prepareEnter(prev)
+      lastNavDirection.value = 'up'
       pendingEnterViewId.value = prev
       activeViewId.value = prev
       willChangeView = true
