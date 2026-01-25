@@ -12,7 +12,7 @@
         {{ t('hero.button') }}
       </UiButton>
 
-      <div class="home-hero__mouse" :class="mouseClasses" aria-hidden="true">
+      <div class="home-hero__mouse" :class="mouseClasses" @click="emit('next')">
         <img class="home-hero__mouse-icon" :src="mouseIcon" alt="" />
       </div>
     </div>
@@ -150,6 +150,7 @@ const mouseClasses = computed(() => ({
     align-items: center;
     transition: opacity 0.292s ease;
     will-change: opacity;
+    cursor: pointer;
 
     &--hidden {
       opacity: 0;
