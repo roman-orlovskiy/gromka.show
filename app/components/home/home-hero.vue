@@ -8,7 +8,12 @@
         <p class="home-hero__description">{{ t('hero.description') }}</p>
       </div>
 
-      <UiButton size="lg" class="home-hero__button" :class="buttonClasses">
+      <UiButton
+        size="lg"
+        class="home-hero__button"
+        :class="buttonClasses"
+        @click="emit('next')"
+      >
         {{ t('hero.button') }}
       </UiButton>
     </div>
@@ -18,6 +23,10 @@
 <script setup lang="ts">
 const { t } = useI18n()
 const settingsStore = useSettingsStore()
+
+const emit = defineEmits<{
+  (e: 'next'): void
+}>()
 
 const props = defineProps<{
   phase: number

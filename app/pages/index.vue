@@ -53,7 +53,12 @@ const activeComponent = computed(() => {
 })
 
 const activeProps = computed(() => {
-  if (activeViewId.value === 'hero') return { phase: heroPhase.value }
+  if (activeViewId.value === 'hero') {
+    return {
+      phase: heroPhase.value,
+      onNext: () => { void runScroll('down') }
+    }
+  }
   return {}
 })
 
