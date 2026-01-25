@@ -8,19 +8,20 @@
         <p class="home-hero__description">{{ t('hero.description') }}</p>
       </div>
 
-      <UiButton
-        size="lg"
-        class="home-hero__button"
-        :class="buttonClasses"
-        @click="emit('next')"
-      >
+      <UiButton size="lg" class="home-hero__button" :class="buttonClasses" @click="emit('next')">
         {{ t('hero.button') }}
       </UiButton>
+
+      <div class="home-hero__mouse" :class="mouseClasses" aria-hidden="true">
+        <img class="home-hero__mouse-icon" :src="mouseIcon" alt="" />
+      </div>
     </div>
   </section>
 </template>
 
 <script setup lang="ts">
+import mouseIcon from '@/assets/icons/mouse.svg'
+
 const { t } = useI18n()
 const settingsStore = useSettingsStore()
 
@@ -46,6 +47,10 @@ const textBlockClasses = computed(() => ({
 
 const buttonClasses = computed(() => ({
   'home-hero__button--hidden': props.phase >= 3
+}))
+
+const mouseClasses = computed(() => ({
+  'home-hero__mouse--hidden': props.phase >= 3
 }))
 </script>
 
@@ -138,6 +143,26 @@ const buttonClasses = computed(() => ({
     }
   }
 
+  &__mouse {
+    margin-top: 0.889rem; // 16px при базовом 18px
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.292s ease;
+    will-change: opacity;
+
+    &--hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+  }
+
+  &__mouse-icon {
+    width: 3.25rem; // 58.5px при базовом 18px
+    height: 3.25rem; // 58.5px при базовом 18px
+    display: block;
+  }
+
   &--dark {
     .home-hero__title {
       color: $color-primary;
@@ -149,6 +174,10 @@ const buttonClasses = computed(() => ({
 
     .home-hero__description {
       color: $color-white-light;
+    }
+
+    .home-hero__mouse-icon {
+      filter: brightness(0) invert(1);
     }
   }
 }
