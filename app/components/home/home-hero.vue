@@ -120,7 +120,7 @@ const buttonClasses = computed(() => ({
   &__button {
     margin-top: 1rem;
     flex-shrink: 0;
-    transition: opacity 0.292s ease;
+    transition: opacity 0.292s ease, background-color 0.3s ease, color 0.3s ease;
     will-change: opacity;
 
     &--hidden {

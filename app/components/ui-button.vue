@@ -35,7 +35,7 @@ const buttonClasses = computed(() => {
   border: none;
   cursor: pointer;
   font-weight: $font-weight-medium;
-  transition: all 0.3s ease;
+  transition: background-color 0.3s ease, color 0.3s ease;
   white-space: nowrap;
   text-decoration: none;
   
@@ -60,47 +60,32 @@ const buttonClasses = computed(() => {
   
   // Варианты
   &--primary {
-    background: $color-primary;
+    background-color: $color-primary;
     color: $color-white;
     
     &:hover {
-      background: $color-primary-dark;
-      transform: translateY(-0.125rem);
-    }
-    
-    &:active {
-      transform: translateY(0);
+      background-color: $color-primary-dark;
     }
   }
   
   &--secondary {
-    background: $color-white;
+    background-color: $color-white;
     color: $color-primary;
     
     &:hover {
-      background: $color-primary-light;
+      background-color: $color-primary-light;
       color: $color-white;
-      transform: translateY(-0.125rem);
-    }
-    
-    &:active {
-      transform: translateY(0);
     }
   }
   
   &--outline {
-    background: transparent;
+    background-color: transparent;
     color: $color-primary;
     border: 2px solid $color-primary;
     
     &:hover {
-      background: $color-primary;
+      background-color: $color-primary;
       color: $color-white;
-      transform: translateY(-0.125rem);
-    }
-    
-    &:active {
-      transform: translateY(0);
     }
   }
   
@@ -109,7 +94,7 @@ const buttonClasses = computed(() => {
     cursor: not-allowed;
     
     &:hover {
-      transform: none;
+      background-color: $color-primary;
     }
   }
 }
