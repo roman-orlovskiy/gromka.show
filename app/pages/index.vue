@@ -96,7 +96,7 @@ const views: ViewConfig[] = [
         // В тот же момент, когда начинается первая анимация hero (phase=1), запускаем и анимацию хедера.
         { phase: 1, delayAfterMs: 250, actions: [{ channel: 'header.hero', value: 1 }] },
         { phase: 2, delayAfterMs: 400 },
-        { phase: 3, delayAfterMs: 0 }
+        { phase: 3, delayAfterMs: 200 }
       ]
     }
   },
