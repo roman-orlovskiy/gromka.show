@@ -14,12 +14,13 @@
 import HomeHero from '@/components/home/home-hero.vue'
 import HomeAbout from '@/components/home/home-about.vue'
 import HomeHowItWorks from '@/components/home/home-how-it-works.vue'
+import HomeBenefits from '@/components/home/home-benefits.vue'
 import { delay } from '@/utils/delay'
 
 const mainStore = useMainStore()
 const animationsStore = useAnimationsStore()
 
-const viewOrder = ['hero', 'about', 'howItWorks'] as const
+const viewOrder = ['hero', 'about', 'howItWorks', 'benefits'] as const
 type ViewId = (typeof viewOrder)[number]
 
 const activeViewId = ref<ViewId>(viewOrder[0])
@@ -50,7 +51,8 @@ const viewTransitionName = computed(() => (lastNavDirection.value === 'down' ? '
 const activeComponent = computed(() => {
   if (activeViewId.value === 'hero') return HomeHero
   if (activeViewId.value === 'about') return HomeAbout
-  return HomeHowItWorks
+  if (activeViewId.value === 'howItWorks') return HomeHowItWorks
+  return HomeBenefits
 })
 
 const activeProps = computed(() => {
@@ -61,6 +63,11 @@ const activeProps = computed(() => {
     }
   }
   if (activeViewId.value === 'about') {
+    return {
+      onNext: () => { void runScroll('down') }
+    }
+  }
+  if (activeViewId.value === 'howItWorks') {
     return {
       onNext: () => { void runScroll('down') }
     }

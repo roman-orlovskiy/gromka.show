@@ -40,15 +40,24 @@
           <p class="home-how-it-works__step-text" v-html="t(step.textKey)" />
         </article>
       </div>
+
+      <div class="home-how-it-works__mouse" @click="emit('next')">
+        <img class="home-how-it-works__mouse-icon" :src="mouseIcon" alt="" />
+      </div>
     </div>
   </section>
 </template>
 
 <script setup lang="ts">
 import { GROMKA_STORAGE_BASE_URL } from '@/constants/storage'
+import mouseIcon from '@/assets/icons/mouse.svg'
 
 const { t } = useI18n()
 const settingsStore = useSettingsStore()
+
+const emit = defineEmits<{
+  (e: 'next'): void
+}>()
 
 const rootClasses = computed(() => ({
   'home-how-it-works--dark': settingsStore.isDarkTheme
@@ -223,6 +232,21 @@ const demoVideoUrl = computed(() => `${GROMKA_STORAGE_BASE_URL}how-it-works.mp4`
     color: $color-gray-700;
     line-height: 1.6;
     text-align: center;
+  }
+
+  &__mouse {
+    margin-top: 1.889rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  &__mouse-icon {
+    width: 3.25rem;
+    height: 3.25rem;
+    display: block;
+    filter: brightness(0) invert(1);
   }
 
   &--dark {

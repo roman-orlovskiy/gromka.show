@@ -11,7 +11,7 @@ export default {
     button: 'How does it work?'
   },
   howItWorks: {
-    title: 'How it works',
+    title: 'How it works?',
     stepLabel: '{n}',
     steps: {
       scanTitle: 'QR code',
@@ -34,6 +34,10 @@ export default {
     media: {
       ariaLabel: 'Demo video'
     }
+  },
+  benefits: {
+    title: 'What do we get?',
+    description: 'Content in development...'
   },
   language: {
     ru: 'RUS',
