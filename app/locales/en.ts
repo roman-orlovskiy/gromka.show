@@ -12,14 +12,19 @@ export default {
   },
   howItWorks: {
     title: 'How it works',
-    stepLabel: 'Step {n}',
+    stepLabel: '{n}',
     steps: {
-      scanTitle: 'I scan the QR',
-      scanText: 'Browser opens. I allow camera and mic access.',
-      startTitle: 'I tap "Start"',
-      startText: 'I raise my phone — my screen and flashlight are now part of the show.',
-      afterTitle: 'I get perks',
-      afterText: 'After the show, I join giveaways and grab promos from brands.'
+      scanTitle: 'QR code',
+      scanText: 'Viewer scans QR code, browser opens, taps "Start"',
+      startTitle: 'Start',
+      startText: 'Raises their phone — their&nbsp;flashlight or&nbsp;screen become part of the show',
+      afterTitle: 'Perks',
+      afterText: 'After the show, they join giveaways and grab promos from brands'
+    },
+    stickers: {
+      browser: 'Works in browser',
+      effects: 'Various flash effects',
+      sync: 'Flashlight sync without internet via ultrasound'
     },
     note: '*Optional — depends on the format.',
     badges: {
