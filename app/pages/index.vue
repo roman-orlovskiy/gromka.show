@@ -13,12 +13,13 @@
 <script setup lang="ts">
 import HomeHero from '@/components/home/home-hero.vue'
 import HomeAbout from '@/components/home/home-about.vue'
+import HomeHowItWorks from '@/components/home/home-how-it-works.vue'
 import { delay } from '@/utils/delay'
 
 const mainStore = useMainStore()
 const animationsStore = useAnimationsStore()
 
-const viewOrder = ['hero', 'about'] as const
+const viewOrder = ['hero', 'about', 'howItWorks'] as const
 type ViewId = (typeof viewOrder)[number]
 
 const activeViewId = ref<ViewId>(viewOrder[0])
@@ -48,13 +49,19 @@ const viewTransitionName = computed(() => (lastNavDirection.value === 'down' ? '
 
 const activeComponent = computed(() => {
   if (activeViewId.value === 'hero') return HomeHero
-  return HomeAbout
+  if (activeViewId.value === 'about') return HomeAbout
+  return HomeHowItWorks
 })
 
 const activeProps = computed(() => {
   if (activeViewId.value === 'hero') {
     return {
       phase: heroPhase.value,
+      onNext: () => { void runScroll('down') }
+    }
+  }
+  if (activeViewId.value === 'about') {
+    return {
       onNext: () => { void runScroll('down') }
     }
   }

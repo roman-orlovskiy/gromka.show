@@ -18,14 +18,24 @@
       </div>
 
       <p class="home-about__description" v-html="t('about.description')" />
+
+      <div class="home-about__mouse" @click="emit('next')">
+        <img class="home-about__mouse-icon" :src="mouseIcon" alt="" />
+      </div>
     </div>
   </section>
 </template>
 
 <script setup lang="ts">
 import { GROMKA_STORAGE_BASE_URL } from '@/constants/storage'
+import mouseIcon from '@/assets/icons/mouse.svg'
 
 const { t } = useI18n()
+
+const emit = defineEmits<{
+  (e: 'next'): void
+}>()
+
 const aboutVideoUrl = computed(() => `${GROMKA_STORAGE_BASE_URL}about-project.mp4`)
 </script>
 
@@ -93,6 +103,21 @@ const aboutVideoUrl = computed(() => `${GROMKA_STORAGE_BASE_URL}about-project.mp
     line-height: 1.6;
     width: 100%;
     max-width: 50.134rem; // совпадает с шириной видео
+  }
+
+  &__mouse {
+    margin-top: 1.889rem; // 34px при базовом 18px
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  &__mouse-icon {
+    width: 3.25rem; // 58.5px при базовом 18px
+    height: 3.25rem; // 58.5px при базовом 18px
+    display: block;
+    filter: brightness(0) invert(1);
   }
 }
 </style>
