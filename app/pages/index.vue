@@ -16,6 +16,7 @@ import HomeAbout from '@/components/home/home-about.vue'
 import { delay } from '@/utils/delay'
 
 const mainStore = useMainStore()
+const animationsStore = useAnimationsStore()
 
 const viewOrder = ['hero', 'about'] as const
 type ViewId = (typeof viewOrder)[number]
@@ -59,6 +60,10 @@ const activeProps = computed(() => {
 type TimelineStep = {
   phase: number
   delayAfterMs: number
+  actions?: ReadonlyArray<{
+    channel: string
+    value: number
+  }>
 }
 
 type ViewConfig = {
@@ -79,8 +84,12 @@ const views: ViewConfig[] = [
       // 2: прячем text-block
       // 3: прячем button (fade)
       steps: [
-        { phase: 0, delayAfterMs: 0 },
-        { phase: 1, delayAfterMs: 250 },
+        // header.hero:
+        // 0 — свитчер по центру (логотип скрыт)
+        // 1 — свитчер справа, логотип слева
+        { phase: 0, delayAfterMs: 0, actions: [{ channel: 'header.hero', value: 0 }] },
+        // В тот же момент, когда начинается первая анимация hero (phase=1), запускаем и анимацию хедера.
+        { phase: 1, delayAfterMs: 250, actions: [{ channel: 'header.hero', value: 1 }] },
         { phase: 2, delayAfterMs: 400 },
         { phase: 3, delayAfterMs: 400 }
       ]
@@ -100,6 +109,11 @@ const playTimeline = async (
   // первый шаг — это базовое состояние, проигрываем со второго
   for (const step of steps.slice(1)) {
     timeline.phase.value = step.phase
+    if (step.actions) {
+      for (const action of step.actions) {
+        animationsStore.setChannel(action.channel, action.value)
+      }
+    }
     if (step.delayAfterMs > 0) {
       await delay(step.delayAfterMs)
     }

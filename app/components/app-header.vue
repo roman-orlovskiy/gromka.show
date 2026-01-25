@@ -13,19 +13,21 @@
 <script setup lang="ts">
 const mainStore = useMainStore()
 const settingsStore = useSettingsStore()
+const { value: heroHeaderState } = useAnimationChannel('header.hero', 0)
 
 const isHeroView = computed(() => mainStore.activeViewId === 'hero')
+const isHeaderExpanded = computed(() => !isHeroView.value || heroHeaderState.value === 1)
 
 const headerClasses = computed(() => ({
   'app-header--dark': settingsStore.isDarkTheme
 }))
 
 const logoClasses = computed(() => ({
-  'app-header__logo--visible': !isHeroView.value
+  'app-header__logo--visible': isHeaderExpanded.value
 }))
 
 const switcherClasses = computed(() => ({
-  'app-header__switcher--centered': isHeroView.value
+  'app-header__switcher--centered': !isHeaderExpanded.value
 }))
 </script>
 
