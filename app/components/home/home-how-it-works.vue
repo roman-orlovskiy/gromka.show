@@ -5,34 +5,111 @@
         <h2 class="home-how-it-works__title">{{ t('howItWorks.title') }}</h2>
       </header>
 
-      <div class="home-how-it-works__video-wrap">
-        <video
-          class="home-how-it-works__video"
-          :src="demoVideoUrl"
-          autoplay
-          muted
-          loop
-          playsinline
-          disablepictureinpicture
-          controlslist="nodownload noplaybackrate noremoteplayback"
-          preload="metadata"
-        />
+      <div class="home-how-it-works__stickers">
+        <div class="home-how-it-works__sticker home-how-it-works__sticker--primary" :class="stickerClasses[0]">
+          {{ t('howItWorks.stickers.browser') }}
+        </div>
+        <div class="home-how-it-works__sticker home-how-it-works__sticker--secondary" :class="stickerClasses[1]">
+          {{ t('howItWorks.stickers.effects') }}
+        </div>
+        <div class="home-how-it-works__sticker home-how-it-works__sticker--thirdary" :class="stickerClasses[2]">
+          {{ t('howItWorks.stickers.sync') }}
+        </div>
+      </div>
+
+      <div
+        class="home-how-it-works__video-wrap"
+      >
+        <button
+          type="button"
+          class="home-how-it-works__nav home-how-it-works__nav--prev"
+          :aria-label="t('howItWorks.media.prev')"
+        >
+          <svg class="home-how-it-works__nav-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </button>
+
+        <div class="home-how-it-works__swiper">
+          <ClientOnly>
+            <Swiper
+              class="home-how-it-works__swiper-instance"
+              :modules="swiperModules"
+              :slides-per-view="1"
+              :loop="true"
+              :speed="420"
+              :allow-touch-move="true"
+              :navigation="swiperNavigation"
+              @swiper="onSwiper"
+              @slideChange="onSlideChange"
+              @slideChangeTransitionStart="onSlideChangeTransitionStart"
+              @slideChangeTransitionEnd="onSlideChangeTransitionEnd"
+            >
+              <SwiperSlide
+                v-for="(slide, idx) in slides"
+                :key="slide.url"
+                class="home-how-it-works__slide"
+              >
+                <video
+                  class="home-how-it-works__video"
+                  :src="slide.url"
+                  autoplay
+                  :muted="isMuted"
+                  playsinline
+                  disablepictureinpicture
+                  controlslist="nodownload noplaybackrate noremoteplayback"
+                  preload="metadata"
+                  :aria-label="t('howItWorks.media.ariaLabel')"
+                  @ended="onVideoEnded"
+                  @loadeddata="onVideoLoaded(idx)"
+                />
+              </SwiperSlide>
+            </Swiper>
+
+            <template #fallback>
+              <video
+                class="home-how-it-works__video"
+                :src="slides[0]?.url"
+                autoplay
+                :muted="isMuted"
+                playsinline
+                disablepictureinpicture
+                controlslist="nodownload noplaybackrate noremoteplayback"
+                preload="metadata"
+                :aria-label="t('howItWorks.media.ariaLabel')"
+              />
+            </template>
+          </ClientOnly>
+        </div>
+
+        <button
+          type="button"
+          class="home-how-it-works__nav home-how-it-works__nav--next"
+          :aria-label="t('howItWorks.media.next')"
+        >
+          <svg class="home-how-it-works__nav-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </button>
         
-        <div class="home-how-it-works__stickers">
-          <div class="home-how-it-works__sticker home-how-it-works__sticker--primary">
-            {{ t('howItWorks.stickers.browser') }}
-          </div>
-          <div class="home-how-it-works__sticker home-how-it-works__sticker--secondary">
-            {{ t('howItWorks.stickers.effects') }}
-          </div>
-          <div class="home-how-it-works__sticker home-how-it-works__sticker--thirdary">
-            {{ t('howItWorks.stickers.sync') }}
-          </div>
+        <div class="home-how-it-works__caption">
+          <span class="home-how-it-works__caption-text" aria-hidden="true">
+            {{ t(activeCaptionKey) }}
+          </span>
+          <button
+            type="button"
+            class="home-how-it-works__sound"
+            :class="soundClasses"
+            :aria-label="soundAriaLabel"
+            @click="toggleSound"
+          >
+            <img class="home-how-it-works__sound-icon" :src="soundIcon" alt="" />
+          </button>
         </div>
       </div>
 
       <div class="home-how-it-works__steps">
-        <article v-for="step in steps" :key="step.n" class="home-how-it-works__step">
+        <article v-for="(step, idx) in steps" :key="step.n" class="home-how-it-works__step" :class="stepClasses[idx]">
           <div class="home-how-it-works__step-top">
             <span class="home-how-it-works__step-index">{{ step.n }}</span>
           </div>
@@ -49,8 +126,16 @@
 </template>
 
 <script setup lang="ts">
+import { Swiper, SwiperSlide } from 'swiper/vue'
+import { Navigation } from 'swiper/modules'
+import 'swiper/css'
+import 'swiper/css/navigation'
+import type { Swiper as SwiperInstance } from 'swiper'
+
 import { GROMKA_STORAGE_BASE_URL } from '@/constants/storage'
 import mouseIcon from '@/assets/icons/mouse.svg'
+import soundOnIcon from '@/assets/icons/sound-on.svg'
+import soundOffIcon from '@/assets/icons/sound-off.svg'
 
 const { t } = useI18n()
 const settingsStore = useSettingsStore()
@@ -59,9 +144,174 @@ const emit = defineEmits<{
   (e: 'next'): void
 }>()
 
+const props = defineProps<{
+  phase?: number
+}>()
+
 const rootClasses = computed(() => ({
   'home-how-it-works--dark': settingsStore.isDarkTheme
 }))
+
+// Вычисляемые классы для стикеров (появляются с паузой 100мс каждый)
+const stickerClasses = computed(() => [
+  {
+    'home-how-it-works__sticker--hidden': (props.phase ?? 0) >= 1
+  },
+  {
+    'home-how-it-works__sticker--hidden': (props.phase ?? 0) >= 2
+  },
+  {
+    'home-how-it-works__sticker--hidden': (props.phase ?? 0) >= 3
+  }
+])
+
+// Вычисляемые классы для шагов (появляются с паузой 100мс каждый после стикеров)
+const stepClasses = computed(() => [
+  {
+    'home-how-it-works__step--hidden': (props.phase ?? 0) >= 4
+  },
+  {
+    'home-how-it-works__step--hidden': (props.phase ?? 0) >= 5
+  },
+  {
+    'home-how-it-works__step--hidden': (props.phase ?? 0) >= 6
+  }
+])
+
+type VideoSlide = {
+  url: string
+  captionKey:
+    | 'howItWorks.media.captions.immersiveTheatre'
+    | 'howItWorks.media.captions.musicControl'
+    | 'howItWorks.media.captions.spartakScreens'
+}
+
+const slides = computed<ReadonlyArray<VideoSlide>>(() => ([
+  { url: `${GROMKA_STORAGE_BASE_URL}how-it-works-1.mp4`, captionKey: 'howItWorks.media.captions.immersiveTheatre' },
+  { url: `${GROMKA_STORAGE_BASE_URL}how-it-works-2.mp4`, captionKey: 'howItWorks.media.captions.musicControl' },
+  { url: `${GROMKA_STORAGE_BASE_URL}how-it-works-3.mp4`, captionKey: 'howItWorks.media.captions.spartakScreens' }
+]))
+
+const swiperModules = [Navigation]
+const swiper = shallowRef<SwiperInstance | null>(null)
+const realIndex = ref(0)
+const isMuted = ref(true)
+
+const swiperNavigation = {
+  prevEl: '.home-how-it-works__nav--prev',
+  nextEl: '.home-how-it-works__nav--next'
+}
+
+const activeCaptionKey = computed(() => slides.value[realIndex.value]?.captionKey ?? 'howItWorks.media.captions.immersiveTheatre')
+
+const soundIcon = computed(() => (isMuted.value ? soundOffIcon : soundOnIcon))
+
+const soundClasses = computed(() => ({
+  'home-how-it-works__sound--muted': isMuted.value
+}))
+
+const soundAriaLabel = computed(() => (
+  isMuted.value ? t('howItWorks.media.soundOn') : t('howItWorks.media.soundOff')
+))
+
+const pauseAllVideos = () => {
+  const s = swiper.value
+  const root = s?.el
+  if (!root) return
+  root.querySelectorAll('video').forEach((v) => {
+    try {
+      v.pause()
+    } catch {
+      // ignore
+    }
+  })
+}
+
+const applyMuteState = () => {
+  const s = swiper.value
+  const root = s?.el
+  if (!root) return
+  root.querySelectorAll('video').forEach((v) => {
+    v.muted = isMuted.value
+  })
+}
+
+const getActiveVideo = (): HTMLVideoElement | null => {
+  const s = swiper.value
+  if (!s) return null
+  const slideEl = s.slides?.[s.activeIndex] as HTMLElement | undefined
+  if (!slideEl) return null
+  return slideEl.querySelector('video')
+}
+
+const playActiveVideo = async () => {
+  const v = getActiveVideo()
+  if (!v) return
+  v.muted = isMuted.value
+  try {
+    v.currentTime = 0
+  } catch {
+    // ignore
+  }
+  try {
+    await v.play()
+  } catch {
+    // autoplay может быть заблокирован браузером — игнорируем
+  }
+}
+
+const onSwiper = (instance: SwiperInstance) => {
+  swiper.value = instance
+  realIndex.value = instance.realIndex ?? 0
+  queueMicrotask(() => {
+    pauseAllVideos()
+    applyMuteState()
+    void playActiveVideo()
+  })
+}
+
+const onSlideChange = (instance: SwiperInstance) => {
+  realIndex.value = instance.realIndex ?? 0
+}
+
+const onSlideChangeTransitionStart = () => {
+  pauseAllVideos()
+}
+
+const onSlideChangeTransitionEnd = () => {
+  void playActiveVideo()
+}
+
+const onVideoEnded = (e: Event) => {
+  const s = swiper.value
+  if (!s) return
+  const activeVideo = getActiveVideo()
+  if (activeVideo && e.target !== activeVideo) return
+  s.slideNext()
+}
+
+const onVideoLoaded = (_idx: number) => async () => {
+  const v = getActiveVideo()
+  if (!v) return
+  v.muted = isMuted.value
+  try {
+    await v.play()
+  } catch {
+    // ignore
+  }
+}
+
+const toggleSound = () => {
+  isMuted.value = !isMuted.value
+  applyMuteState()
+  const v = getActiveVideo()
+  if (!v) return
+  try {
+    void v.play()
+  } catch {
+    // ignore
+  }
+}
 
 type Step = {
   n: 1 | 2 | 3
@@ -74,8 +324,6 @@ const steps: ReadonlyArray<Step> = [
   { n: 2, titleKey: 'howItWorks.steps.startTitle', textKey: 'howItWorks.steps.startText' },
   { n: 3, titleKey: 'howItWorks.steps.afterTitle', textKey: 'howItWorks.steps.afterText' }
 ]
-
-const demoVideoUrl = computed(() => `${GROMKA_STORAGE_BASE_URL}how-it-works.mp4`)
 </script>
 
 <style lang="scss" scoped>
@@ -129,6 +377,95 @@ const demoVideoUrl = computed(() => `${GROMKA_STORAGE_BASE_URL}how-it-works.mp4`
     }
   }
 
+  &__nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 5;
+    width: 3.556rem; // 64px при базовом 18px
+    height: 3.556rem; // 64px при базовом 18px
+    border-radius: 999rem;
+    border: 0;
+    background: transparent;
+    color: $color-primary;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: none;
+    transition: transform 0.18s ease, opacity 0.18s ease, filter 0.18s ease;
+    will-change: transform, opacity;
+
+    &:hover {
+      filter: brightness(1.05);
+    }
+
+    &:active {
+      transform: translateY(-50%) scale(0.98);
+    }
+
+    &--prev {
+      left: 1rem;
+    }
+
+    &--next {
+      right: 1rem;
+    }
+  }
+
+  &__nav-icon {
+    width: 2.222rem; // 40px
+    height: 2.222rem; // 40px
+    display: block;
+  }
+
+  &__sound {
+    z-index: 5;
+    width: 3.556rem; // 64px при базовом 18px
+    height: 3.556rem; // 64px при базовом 18px
+    border-radius: 999rem;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    filter: drop-shadow(0 0.333rem 1rem rgba(0, 0, 0, 0.24));
+    transition: transform 0.18s ease, filter 0.18s ease;
+
+    &:hover {
+      filter: drop-shadow(0 0.333rem 1rem rgba(0, 0, 0, 0.3)) brightness(1.05);
+    }
+
+    &:active {
+      transform: scale(0.98);
+    }
+  }
+
+  &__sound-icon {
+    width: 1.667rem; // 30px
+    height: 1.667rem; // 30px
+    display: block;
+  }
+
+  &__swiper {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    overflow: hidden;
+  }
+
+  &__swiper-instance {
+    height: 100%;
+    width: 100%;
+  }
+
+  &__slide {
+    width: 100%;
+    position: relative;
+  }
+
   &__video {
     position: absolute;
     inset: 0;
@@ -139,13 +476,48 @@ const demoVideoUrl = computed(() => `${GROMKA_STORAGE_BASE_URL}how-it-works.mp4`
   }
 
   &__stickers {
+    width: 100%;
+    max-width: 41.8rem;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.667rem;
+    flex-wrap: nowrap;
+  }
+
+  &__caption {
     position: absolute;
-    inset: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 4;
+    padding: 0.889rem 1rem; // 16px 18px
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    font-size: 1rem; // 18px
+    font-family: $font-default;
+    font-weight: $font-weight-medium;
+    color: $color-white;
+    text-shadow: 0 0.111rem 0.444rem rgba(0, 0, 0, 0.5);
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.58) 100%);
+    pointer-events: auto;
+  }
+
+  &__caption-text {
+    grid-column: 2;
+    justify-self: center;
+    text-align: center;
     pointer-events: none;
   }
 
+  &__caption .home-how-it-works__sound {
+    grid-column: 3;
+    justify-self: end;
+  }
+
   &__sticker {
-    position: absolute;
     padding: 0.5rem 0.833rem;
     border-radius: 0.667rem;
     font-size: 0.778rem;
@@ -153,28 +525,32 @@ const demoVideoUrl = computed(() => `${GROMKA_STORAGE_BASE_URL}how-it-works.mp4`
     color: $color-black;
     box-shadow: 0 0.222rem 0.667rem rgba(0, 0, 0, 0.15);
     white-space: nowrap;
+    transform: translateY(0);
+    transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+      transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: opacity, transform;
+    flex: 1 1 0;
+    text-align: center;
+    min-width: 0;
+
+    &--hidden {
+      opacity: 0;
+      transform: translateY(-2rem);
+      pointer-events: none;
+    }
 
     &--primary {
       background: $color-primary;
-      top: 1.111rem;
-      left: 1.111rem;
-      transform: rotate(-3deg);
       color: $color-white;
     }
 
     &--secondary {
       background: $color-secondary;
-      top: 1.111rem;
-      right: 1.111rem;
-      transform: rotate(2deg);
     }
 
     &--thirdary {
       background: $color-thirdary;
       color: $color-white;
-      top: 4.889rem;
-      left: 50%;
-      transform: translateX(-50%) rotate(3deg);
     }
   }
 
@@ -195,6 +571,15 @@ const demoVideoUrl = computed(() => `${GROMKA_STORAGE_BASE_URL}how-it-works.mp4`
     flex-direction: column;
     gap: 0.556rem;
     position: relative;
+    transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+      transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: opacity, transform;
+
+    &--hidden {
+      opacity: 0;
+      transform: translateX(3rem);
+      pointer-events: none;
+    }
   }
 
   &__step-top {
@@ -274,6 +659,29 @@ const demoVideoUrl = computed(() => `${GROMKA_STORAGE_BASE_URL}how-it-works.mp4`
 
     &__steps {
       grid-template-columns: 1fr;
+    }
+
+    &__nav {
+      width: 3.111rem; // 43.5px при базовом 14px (моб)
+      height: 3.111rem;
+
+      &--prev {
+        left: 0.667rem;
+      }
+
+      &--next {
+        right: 0.667rem;
+      }
+    }
+
+    &__caption {
+      font-size: 0.929rem; // ~13px при базовом 14px
+      padding: 0.667rem 0.889rem;
+    }
+
+    &__sound {
+      width: 3.111rem; // 43.5px при базовом 14px (моб)
+      height: 3.111rem;
     }
   }
 }

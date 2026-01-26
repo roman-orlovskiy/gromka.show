@@ -25,6 +25,7 @@ type ViewId = (typeof viewOrder)[number]
 
 const activeViewId = ref<ViewId>(viewOrder[0])
 const heroPhase = ref(0)
+const howItWorksPhase = ref(0)
 
 // Синхронизация activeViewId со стором для хедера
 watch(activeViewId, (newViewId) => {
@@ -69,6 +70,7 @@ const activeProps = computed(() => {
   }
   if (activeViewId.value === 'howItWorks') {
     return {
+      phase: howItWorksPhase.value,
       onNext: () => { void runScroll('down') }
     }
   }
@@ -113,7 +115,25 @@ const views: ViewConfig[] = [
       ]
     }
   },
-  { id: 'about' }
+  { id: 'about' },
+  {
+    id: 'howItWorks',
+    timeline: {
+      phase: howItWorksPhase,
+      // 0: всё видно
+      // 1-3: прячем стикеры по очереди (100мс пауза)
+      // 4-6: прячем шаги по очереди (100мс пауза)
+      steps: [
+        { phase: 0, delayAfterMs: 0 },
+        { phase: 1, delayAfterMs: 100 },
+        { phase: 2, delayAfterMs: 100 },
+        { phase: 3, delayAfterMs: 100 },
+        { phase: 4, delayAfterMs: 100 },
+        { phase: 5, delayAfterMs: 100 },
+        { phase: 6, delayAfterMs: 100 }
+      ]
+    }
+  }
 ]
 
 const getView = (id: ViewId) => views.find(v => v.id === id)
@@ -172,6 +192,8 @@ const runScroll = async (direction: 'down' | 'up') => {
     const nextIndex = Math.min(activeIndex.value + 1, viewOrder.length - 1)
     const next = viewOrder[nextIndex]!
     if (next !== activeViewId.value) {
+      // Подготавливаем "скрытое" состояние ДО монтирования (важно при mode="out-in")
+      prepareEnter(next)
       // Направление определяем строго по индексу: растёт -> вниз, падает -> вверх
       lastNavDirection.value = nextIndex > activeIndex.value ? 'down' : 'up'
       pendingEnterViewId.value = next

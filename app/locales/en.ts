@@ -24,7 +24,7 @@ export default {
     stickers: {
       browser: 'Works in browser',
       effects: 'Various flash effects',
-      sync: 'Flashlight sync without internet via ultrasound'
+      sync: 'Ultrasound sync'
     },
     note: '*Optional — depends on the format.',
     badges: {
@@ -32,7 +32,16 @@ export default {
       sync: 'Synced via ultrasound.'
     },
     media: {
-      ariaLabel: 'Demo video'
+      ariaLabel: 'Demo video',
+      prev: 'Previous video',
+      next: 'Next video',
+      soundOn: 'Turn sound on',
+      soundOff: 'Turn sound off',
+      captions: {
+        immersiveTheatre: 'Immersive theatre show',
+        musicControl: 'Music-driven control example',
+        spartakScreens: 'Red-and-white screens at Spartak'
+      }
     }
   },
   benefits: {
