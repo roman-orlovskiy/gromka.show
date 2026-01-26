@@ -46,6 +46,15 @@ export default {
   },
   benefits: {
     title: 'What do we get?',
+    items: [
+      'Wow effect...',
+      'Brand, artist advertising in audience phones',
+      'Post-show quizzes and giveaways possible',
+      'Any interactive mechanics'
+    ]
+  },
+  pricing: {
+    title: 'Pricing',
     description: 'Content in development...'
   },
   language: {

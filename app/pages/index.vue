@@ -15,17 +15,19 @@ import HomeHero from '@/components/home/home-hero.vue'
 import HomeAbout from '@/components/home/home-about.vue'
 import HomeHowItWorks from '@/components/home/home-how-it-works.vue'
 import HomeBenefits from '@/components/home/home-benefits.vue'
+import HomePricing from '@/components/home/home-pricing.vue'
 import { delay } from '@/utils/delay'
 
 const mainStore = useMainStore()
 const animationsStore = useAnimationsStore()
 
-const viewOrder = ['hero', 'about', 'howItWorks', 'benefits'] as const
+const viewOrder = ['hero', 'about', 'howItWorks', 'benefits', 'pricing'] as const
 type ViewId = (typeof viewOrder)[number]
 
 const activeViewId = ref<ViewId>(viewOrder[0])
 const heroPhase = ref(0)
 const howItWorksPhase = ref(0)
+const benefitsPhase = ref(0)
 
 // Синхронизация activeViewId со стором для хедера
 watch(activeViewId, (newViewId) => {
@@ -53,7 +55,8 @@ const activeComponent = computed(() => {
   if (activeViewId.value === 'hero') return HomeHero
   if (activeViewId.value === 'about') return HomeAbout
   if (activeViewId.value === 'howItWorks') return HomeHowItWorks
-  return HomeBenefits
+  if (activeViewId.value === 'benefits') return HomeBenefits
+  return HomePricing
 })
 
 const activeProps = computed(() => {
@@ -71,6 +74,12 @@ const activeProps = computed(() => {
   if (activeViewId.value === 'howItWorks') {
     return {
       phase: howItWorksPhase.value,
+      onNext: () => { void runScroll('down') }
+    }
+  }
+  if (activeViewId.value === 'benefits') {
+    return {
+      phase: benefitsPhase.value,
       onNext: () => { void runScroll('down') }
     }
   }
@@ -131,6 +140,21 @@ const views: ViewConfig[] = [
         { phase: 4, delayAfterMs: 100 },
         { phase: 5, delayAfterMs: 100 },
         { phase: 6, delayAfterMs: 100 }
+      ]
+    }
+  },
+  {
+    id: 'benefits',
+    timeline: {
+      phase: benefitsPhase,
+      // 0: всё видно
+      // 1-4: прячем элементы списка по очереди (350мс пауза)
+      steps: [
+        { phase: 0, delayAfterMs: 0 },
+        { phase: 1, delayAfterMs: 350 },
+        { phase: 2, delayAfterMs: 350 },
+        { phase: 3, delayAfterMs: 350 },
+        { phase: 4, delayAfterMs: 350 }
       ]
     }
   }
