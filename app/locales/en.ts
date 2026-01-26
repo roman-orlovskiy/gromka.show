@@ -55,7 +55,23 @@ export default {
   },
   pricing: {
     title: 'Pricing',
-    description: 'Content in development...'
+    plans: {
+      simple: {
+        title: 'Simple effects',
+        price: '10 RUB per person',
+        text: 'Flickering\nflashlights or screens\nno seat mapping and no promos'
+      },
+      waves: {
+        title: 'Light waves and patterns',
+        price: '20 RUB per person',
+        text: 'Light waves and patterns\nfrom flashlights or screens\nbased on a pre-programmed pattern, with seat mapping in a specific venue.'
+      },
+      brand: {
+        title: 'Brand collaboration',
+        price: '+ from 30 RUB to the plan',
+        text: 'Brand collaboration\nvia post-event engagement (chat-bot, giveaway, game, special project, exclusive content)'
+      }
+    }
   },
   language: {
     ru: 'RUS',

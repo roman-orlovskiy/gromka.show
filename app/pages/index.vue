@@ -28,6 +28,7 @@ const activeViewId = ref<ViewId>(viewOrder[0])
 const heroPhase = ref(0)
 const howItWorksPhase = ref(0)
 const benefitsPhase = ref(0)
+const pricingPhase = ref(0)
 
 // Синхронизация activeViewId со стором для хедера
 watch(activeViewId, (newViewId) => {
@@ -81,6 +82,11 @@ const activeProps = computed(() => {
     return {
       phase: benefitsPhase.value,
       onNext: () => { void runScroll('down') }
+    }
+  }
+  if (activeViewId.value === 'pricing') {
+    return {
+      phase: pricingPhase.value
     }
   }
   return {}
@@ -155,6 +161,20 @@ const views: ViewConfig[] = [
         { phase: 2, delayAfterMs: 350 },
         { phase: 3, delayAfterMs: 350 },
         { phase: 4, delayAfterMs: 350 }
+      ]
+    }
+  },
+  {
+    id: 'pricing',
+    timeline: {
+      phase: pricingPhase,
+      // 0: всё видно
+      // 1-3: прячем карточки по очереди (100мс пауза)
+      steps: [
+        { phase: 0, delayAfterMs: 0 },
+        { phase: 1, delayAfterMs: 100 },
+        { phase: 2, delayAfterMs: 100 },
+        { phase: 3, delayAfterMs: 100 }
       ]
     }
   }
