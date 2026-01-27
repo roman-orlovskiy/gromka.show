@@ -73,6 +73,43 @@ export default {
       }
     }
   },
+  contacts: {
+    title: 'Contacts',
+    subtitle: "Leave your details — we'll discuss the event format and propose the best mechanics.",
+    fields: {
+      name: {
+        label: 'Name *',
+        placeholder: 'How should we address you'
+      },
+      email: {
+        label: 'Email *',
+        placeholder: 'name@company.com'
+      },
+      phone: {
+        label: 'Phone',
+        placeholder: '+7 (___) ___-__-__'
+      },
+      description: {
+        label: 'Event description',
+        placeholder: 'City, venue, date, audience, goal...'
+      }
+    },
+    submit: 'Send',
+    submitPending: 'Sending...',
+    success: 'Thanks! We received your message and will get back to you soon.',
+    errors: {
+      required: 'Required field',
+      email: {
+        required: 'Required field',
+        invalid: 'Invalid email'
+      }
+    },
+    links: {
+      email: 'info@gromka.show',
+      telegramLabel: 'Telegram: @orlovskiy_rl',
+      telegramUrl: 'https://t.me/orlovskiy_rl'
+    }
+  },
   language: {
     ru: 'RUS',
     en: 'ENG',

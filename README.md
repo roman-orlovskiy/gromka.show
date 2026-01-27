@@ -1,75 +1,30 @@
-# Nuxt Minimal Starter
+# gromka.show
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+Nuxt 4 приложение + Postgres (Prisma) для сохранения заявок с формы “Контакты”.
 
-## Setup
+## Переменные окружения
 
-Make sure to install dependencies:
+Скопируйте `.env.example` в `.env` и при необходимости поменяйте `DATABASE_URL`.
 
-```bash
-# npm
-npm install
+## База данных (Prisma)
 
-# pnpm
-pnpm install
+- **Dev (локально)**: миграции создаём и применяем только через `prisma migrate dev`.
+- **Prod/CI**: применяем уже существующие миграции через `prisma migrate deploy`.
 
-# yarn
-yarn install
-
-# bun
-bun install
-```
-
-## Development Server
-
-Start the development server on `http://localhost:3000`:
+Команды (внутри контейнера `app`):
 
 ```bash
-# npm
-npm run dev
+# dev: создать и применить миграцию (локально)
+docker compose -f docker-compose.dev.yml exec app npx prisma migrate dev --name init_contacts
 
-# pnpm
-pnpm dev
+# dev/prod: сгенерировать Prisma Client
+docker compose -f docker-compose.dev.yml exec app npx prisma generate
 
-# yarn
-yarn dev
-
-# bun
-bun run dev
+# prod/ci: применить существующие миграции (без создания новых)
+docker compose -f docker-compose.prod.yml exec app npx prisma migrate deploy
 ```
 
-## Production
+## Docker
 
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+- **Dev**: `docker-compose.dev.yml` (код монтируется volume’ом).
+- **Prod**: `docker-compose.prod.yml` (сборка образа + `migrate deploy` перед стартом).

@@ -1,0 +1,9 @@
+.git
+.nuxt
+.output
+node_modules
+npm-debug.log
+dist
+coverage
+.DS_Store
+

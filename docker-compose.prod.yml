@@ -1,0 +1,25 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: gromka
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - gromka_db_prod:/var/lib/postgresql/data
+
+  app:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.prod
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/gromka?schema=public
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    command: sh -c "npx prisma migrate deploy && node .output/server/index.mjs"
+
+volumes:
+  gromka_db_prod:
+

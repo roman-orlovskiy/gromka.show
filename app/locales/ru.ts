@@ -73,6 +73,43 @@ export default {
       }
     }
   },
+  contacts: {
+    title: 'Контакты',
+    subtitle: 'Оставьте контакты — обсудим формат мероприятия и подберём оптимальную механику.',
+    fields: {
+      name: {
+        label: 'Имя *',
+        placeholder: 'Как к вам обращаться'
+      },
+      email: {
+        label: 'Email *',
+        placeholder: 'name@company.com'
+      },
+      phone: {
+        label: 'Телефон',
+        placeholder: '+7 (___) ___-__-__'
+      },
+      description: {
+        label: 'Описание мероприятия',
+        placeholder: 'Город, площадка, дата, аудитория, задача...'
+      }
+    },
+    submit: 'Отправить',
+    submitPending: 'Отправляем...',
+    success: 'Спасибо! Мы получили сообщение и скоро свяжемся.',
+    errors: {
+      required: 'Обязательное поле',
+      email: {
+        required: 'Обязательное поле',
+        invalid: 'Некорректный email'
+      }
+    },
+    links: {
+      email: 'info@gromka.show',
+      telegramLabel: 'Telegram: @orlovskiy_rl',
+      telegramUrl: 'https://t.me/orlovskiy_rl'
+    }
+  },
   language: {
     ru: 'RUS',
     en: 'ENG',

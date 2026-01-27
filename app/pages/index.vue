@@ -16,12 +16,13 @@ import HomeAbout from '@/components/home/home-about.vue'
 import HomeHowItWorks from '@/components/home/home-how-it-works.vue'
 import HomeBenefits from '@/components/home/home-benefits.vue'
 import HomePricing from '@/components/home/home-pricing.vue'
+import HomeContacts from '@/components/home/home-contacts.vue'
 import { delay } from '@/utils/delay'
 
 const mainStore = useMainStore()
 const animationsStore = useAnimationsStore()
 
-const viewOrder = ['hero', 'about', 'howItWorks', 'benefits', 'pricing'] as const
+const viewOrder = ['hero', 'about', 'howItWorks', 'benefits', 'pricing', 'contacts'] as const
 type ViewId = (typeof viewOrder)[number]
 
 const activeViewId = ref<ViewId>(viewOrder[0])
@@ -29,6 +30,7 @@ const heroPhase = ref(0)
 const howItWorksPhase = ref(0)
 const benefitsPhase = ref(0)
 const pricingPhase = ref(0)
+const contactsPhase = ref(0)
 
 // Синхронизация activeViewId со стором для хедера
 watch(activeViewId, (newViewId) => {
@@ -57,7 +59,8 @@ const activeComponent = computed(() => {
   if (activeViewId.value === 'about') return HomeAbout
   if (activeViewId.value === 'howItWorks') return HomeHowItWorks
   if (activeViewId.value === 'benefits') return HomeBenefits
-  return HomePricing
+  if (activeViewId.value === 'pricing') return HomePricing
+  return HomeContacts
 })
 
 const activeProps = computed(() => {
@@ -87,6 +90,11 @@ const activeProps = computed(() => {
   if (activeViewId.value === 'pricing') {
     return {
       phase: pricingPhase.value
+    }
+  }
+  if (activeViewId.value === 'contacts') {
+    return {
+      phase: contactsPhase.value
     }
   }
   return {}
@@ -177,6 +185,18 @@ const views: ViewConfig[] = [
         { phase: 3, delayAfterMs: 100 }
       ]
     }
+  },
+  {
+    id: 'contacts',
+    timeline: {
+      phase: contactsPhase,
+      // 0: всё видно
+      // 1: скрываем контент (exit)
+      steps: [
+        { phase: 0, delayAfterMs: 0 },
+        { phase: 1, delayAfterMs: 120 }
+      ]
+    }
   }
 ]
 
@@ -230,12 +250,11 @@ const runScroll = async (direction: 'down' | 'up') => {
   let willChangeView = false
 
   if (direction === 'down') {
-    // уход с текущего слайда (если есть внутренние анимации)
-    await playExit(activeViewId.value)
-
     const nextIndex = Math.min(activeIndex.value + 1, viewOrder.length - 1)
     const next = viewOrder[nextIndex]!
     if (next !== activeViewId.value) {
+      // уход с текущего слайда (если есть внутренние анимации)
+      await playExit(activeViewId.value)
       // Подготавливаем "скрытое" состояние ДО монтирования (важно при mode="out-in")
       prepareEnter(next)
       // Направление определяем строго по индексу: растёт -> вниз, падает -> вверх
