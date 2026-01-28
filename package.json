@@ -3,13 +3,15 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "docker compose -f docker-compose.dev.yml up --build",
-    "dev:down": "docker compose -f docker-compose.dev.yml down",
-    "prod": "docker compose -f docker-compose.prod.yml up -d --build",
-    "prod:down": "docker compose -f docker-compose.prod.yml down",
-    "db:generate": "docker compose -f docker-compose.dev.yml exec app npx prisma generate",
-    "db:migrate:dev": "docker compose -f docker-compose.dev.yml exec app npx prisma migrate dev",
-    "db:migrate:deploy": "docker compose -f docker-compose.prod.yml exec app npx prisma migrate deploy",
+    "dev": "docker compose -p gromka-show -f docker-compose.dev.yml up",
+    "dev:build": "docker compose -p gromka-show -f docker-compose.dev.yml up --build",
+    "dev:rebuild": "docker compose -p gromka-show -f docker-compose.dev.yml build --no-cache",
+    "dev:down": "docker compose -p gromka-show -f docker-compose.dev.yml down",
+    "prod": "docker compose -p gromka-show -f docker-compose.prod.yml up -d --build",
+    "prod:down": "docker compose -p gromka-show -f docker-compose.prod.yml down",
+    "db:generate": "docker compose -p gromka-show -f docker-compose.dev.yml exec app npx prisma generate",
+    "db:migrate:dev": "docker compose -p gromka-show -f docker-compose.dev.yml exec app npx prisma migrate dev",
+    "db:migrate:deploy": "docker compose -p gromka-show -f docker-compose.prod.yml exec app npx prisma migrate deploy",
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
