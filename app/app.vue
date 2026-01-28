@@ -29,7 +29,7 @@ onMounted(() => {
 
 html {
   // По умолчанию для широких экранов (landscape) - от высоты
-  font-size: clamp(10px, 1.8vh, 18px);
+  font-size: 1.8vh;
   min-height: 100%;
   height: 100%;
   margin: 0;
@@ -38,7 +38,7 @@ html {
   
   // Для узких экранов (aspect ratio < 17:10) - от ширины
   @include layout-aspect-tablet {
-    font-size: clamp(10px, 1.2vw, 18px);
+    font-size: 1.2vw;
   }
 }
 
