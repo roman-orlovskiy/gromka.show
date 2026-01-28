@@ -446,6 +446,8 @@ const submit = async () => {
     align-items: flex-start;
     gap: 0.667rem;
     width: 100%;
+    padding-left: 3.333rem;
+    padding-bottom: 1.722rem;
     transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1),
       transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     will-change: opacity, transform;
