@@ -3,14 +3,12 @@
     <div class="home-contacts__content">
       <header class="home-contacts__header" :class="headerClasses">
         <h2 class="home-contacts__title">{{ t('contacts.title') }}</h2>
-        <p class="home-contacts__subtitle">{{ t('contacts.subtitle') }}</p>
       </header>
 
       <div class="home-contacts__panel" :class="panelClasses">
         <form class="home-contacts__form" @submit.prevent="submit">
           <div class="home-contacts__grid">
             <div class="home-contacts__field">
-              <label class="home-contacts__label" for="contact-name">{{ t('contacts.fields.name.label') }}</label>
               <input
                 id="contact-name"
                 v-model="form.name"
@@ -18,14 +16,13 @@
                 :class="inputClasses.name"
                 type="text"
                 autocomplete="name"
-                :placeholder="t('contacts.fields.name.placeholder')"
+                :placeholder="t('contacts.fields.name.label')"
                 @blur="touch('name')"
               />
               <div v-if="fieldErrorText.name" class="home-contacts__error">{{ fieldErrorText.name }}</div>
             </div>
 
             <div class="home-contacts__field">
-              <label class="home-contacts__label" for="contact-email">{{ t('contacts.fields.email.label') }}</label>
               <input
                 id="contact-email"
                 v-model="form.email"
@@ -34,38 +31,35 @@
                 type="email"
                 autocomplete="email"
                 inputmode="email"
-                :placeholder="t('contacts.fields.email.placeholder')"
+                :placeholder="t('contacts.fields.email.label')"
                 @blur="touch('email')"
               />
               <div v-if="fieldErrorText.email" class="home-contacts__error">{{ fieldErrorText.email }}</div>
             </div>
 
             <div class="home-contacts__field">
-              <label class="home-contacts__label" for="contact-phone">{{ t('contacts.fields.phone.label') }}</label>
               <input
                 id="contact-phone"
-                :value="form.phone"
+                v-model="phoneModel"
                 class="home-contacts__input"
                 :class="inputClasses.phone"
                 type="tel"
                 autocomplete="tel"
                 inputmode="tel"
-                :placeholder="t('contacts.fields.phone.placeholder')"
-                @input="onPhoneInput"
+                :placeholder="t('contacts.fields.phone.label')"
                 @blur="touch('phone')"
               />
               <div v-if="fieldErrorText.phone" class="home-contacts__error">{{ fieldErrorText.phone }}</div>
             </div>
 
             <div class="home-contacts__field home-contacts__field--full">
-              <label class="home-contacts__label" for="contact-description">{{ t('contacts.fields.description.label') }}</label>
               <textarea
                 id="contact-description"
                 v-model="form.description"
                 class="home-contacts__textarea"
                 :class="inputClasses.description"
                 rows="4"
-                :placeholder="t('contacts.fields.description.placeholder')"
+                :placeholder="t('contacts.fields.description.label')"
                 @blur="touch('description')"
               />
               <div v-if="fieldErrorText.description" class="home-contacts__error">{{ fieldErrorText.description }}</div>
@@ -73,7 +67,7 @@
           </div>
 
           <div class="home-contacts__actions">
-            <UiButton class="home-contacts__submit" :disabled="isSubmitting">
+            <UiButton size="lg" class="home-contacts__submit" :disabled="isSubmitting">
               {{ isSubmitting ? t('contacts.submitPending') : t('contacts.submit') }}
             </UiButton>
             <p v-if="isSuccess" class="home-contacts__success">{{ t('contacts.success') }}</p>
@@ -182,11 +176,12 @@ const inputClasses = computed<Record<FieldKey, Record<string, boolean>>>(() => {
 
 const mailtoHref = computed(() => `mailto:${t('contacts.links.email')}`)
 
-const onPhoneInput = (e: Event) => {
-  const target = e.target as HTMLInputElement | null
-  if (!target) return
-  form.phone = formatPhone(target.value)
-}
+const phoneModel = computed({
+  get: () => form.phone,
+  set: (value: string) => {
+    form.phone = formatPhone(value)
+  }
+})
 
 const submit = async () => {
   touched.name = true
@@ -277,22 +272,12 @@ const submit = async () => {
     font-family: $font-default;
   }
 
-  &__subtitle {
-    margin: 0;
-    font-size: 1rem;
-    font-family: $font-inter;
-    font-weight: $font-weight-regular;
-    color: $color-gray-700;
-    line-height: 1.6;
-    max-width: 41.8rem;
-  }
-
   &__panel {
     width: 100%;
     max-width: 41.8rem;
     border-radius: 1.111rem;
-    background: $color-white-light;
-    border: 1px solid rgba(44, 44, 44, 0.08);
+    background: transparent;
+    border: none;
     padding: 1.333rem;
     transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1),
       transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
@@ -307,21 +292,30 @@ const submit = async () => {
 
   &__form {
     width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 
   &__grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    gap: 0.2rem;
+    max-width: 22rem;
   }
 
   &__field {
     display: flex;
     flex-direction: column;
     gap: 0.444rem;
+    width: 100%;
+    position: relative;
+    padding-bottom: 1.444rem;
 
     &--full {
-      grid-column: 1 / -1;
+      width: 100%;
     }
   }
 
@@ -335,13 +329,14 @@ const submit = async () => {
   &__input,
   &__textarea {
     width: 100%;
-    border-radius: 0.778rem;
+    border-radius: 1rem;
     border: 1px solid rgba(44, 44, 44, 0.12);
     background: rgba(255, 255, 255, 0.9);
     color: $color-black;
-    font-family: $font-inter;
-    font-size: 0.926rem;
-    padding: 0.722rem 0.889rem;
+    font-family: $font-default;
+    font-weight: $font-weight-medium;
+    font-size: 1rem;
+    padding: 1.722rem 3.333rem;
     outline: none;
     transition: border-color 0.18s ease, box-shadow 0.18s ease;
 
@@ -350,26 +345,35 @@ const submit = async () => {
     }
 
     &:focus {
-      border-color: rgba(255, 0, 92, 0.55);
-      box-shadow: 0 0 0 0.222rem rgba(255, 0, 92, 0.12);
+      border-color: $color-primary-light;
+      box-shadow: 0 0 0 0.222rem rgba($color-primary-light, 0.52);
     }
 
     &--error {
       border-color: $color-primary;
-      box-shadow: 0 0 0 0.222rem rgba(255, 0, 92, 0.12);
+      box-shadow: 0 0 0 0.222rem rgba($color-primary-light, 0.72);
     }
   }
 
   &__textarea {
     resize: vertical;
-    min-height: 6.5rem;
+    min-height: 8.889rem;
   }
 
   &__error {
-    font-size: 0.778rem;
+    font-size: 0.7rem;
     font-family: $font-inter;
+    font-weight: $font-weight-light;
     color: $color-primary;
     line-height: 1.3;
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%);
+    width: 100%;
+    text-align: center;
+    pointer-events: none;
+    bottom: 0.2rem;
   }
 
   &__actions {
@@ -378,11 +382,12 @@ const submit = async () => {
     flex-direction: column;
     gap: 0.667rem;
     align-items: center;
+    width: 100%;
+    max-width: 22rem;
   }
 
   &__submit {
     width: 100%;
-    max-width: 22.222rem;
   }
 
   &__success {
@@ -426,13 +431,9 @@ const submit = async () => {
   &--dark {
     color: $color-white;
 
-    .home-contacts__subtitle {
-      color: rgba(255, 255, 255, 0.78);
-    }
-
     .home-contacts__panel {
-      background: rgba(255, 255, 255, 0.06);
-      border-color: rgba(255, 255, 255, 0.12);
+      background: transparent;
+      border: none;
     }
 
     .home-contacts__label {
@@ -447,6 +448,18 @@ const submit = async () => {
 
       &::placeholder {
         color: rgba(255, 255, 255, 0.42);
+      }
+
+      &:-webkit-autofill,
+      &:-webkit-autofill:hover,
+      &:-webkit-autofill:focus,
+      &:-webkit-autofill:active {
+        -webkit-box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0.22) inset !important;
+        box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0.22) inset !important;
+        -webkit-text-fill-color: $color-white !important;
+        caret-color: $color-white;
+        background-color: rgba(0, 0, 0, 0.22) !important;
+        transition: background-color 5000s ease-in-out 0s;
       }
     }
   }
@@ -463,7 +476,6 @@ const submit = async () => {
     }
 
     &__grid {
-      grid-template-columns: 1fr;
       gap: 0.889rem;
     }
 

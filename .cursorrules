@@ -84,3 +84,5 @@ docker compose exec app npx prisma migrate dev --name add_runner_game_settings
 13) Если речь о мобильной верстке, то 1rem = 14px
 
 14) Все тексты передаются через i18n
+
+15) Цвета используй из variables.scss, даже если rgba, то подставляй цвета из variables.scss

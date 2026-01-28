@@ -75,7 +75,6 @@ export default {
   },
   contacts: {
     title: 'Contacts',
-    subtitle: "Leave your details — we'll discuss the event format and propose the best mechanics.",
     fields: {
       name: {
         label: 'Name *',
