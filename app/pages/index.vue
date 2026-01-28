@@ -2,7 +2,7 @@
   <div class="page">
     <div class="page__header" aria-hidden="true" />
 
-    <div ref="contentRef" class="page__content" @wheel="handleWheel">
+    <div class="page__content" @wheel="handleWheel">
       <Transition
         :name="viewTransitionName"
         mode="out-in"
@@ -79,29 +79,12 @@ const AFTER_ENTER_UNLOCK_MS = 208
 const slideNavTrackRef = ref<HTMLElement | null>(null)
 const slideNavFillRef = ref<HTMLElement | null>(null)
 const segmentRefs = ref<Array<HTMLElement | null>>([])
-const contentRef = ref<HTMLElement | null>(null)
 
 const handleWheel = (event: WheelEvent) => {
   if (Math.abs(event.deltaY) < 8) return
-
-  const el = contentRef.value
   const direction: 'down' | 'up' = event.deltaY > 0 ? 'down' : 'up'
 
-  // Если есть внутренний скролл и мы не на границе — даём браузеру скроллить контент.
-  if (el) {
-    const canScroll = el.scrollHeight > el.clientHeight + 1
-    if (canScroll) {
-      if (direction === 'down') {
-        const isAtBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 1
-        if (!isAtBottom) return
-      } else {
-        const isAtTop = el.scrollTop <= 1
-        if (!isAtTop) return
-      }
-    }
-  }
-
-  // Иначе — переключаем слайд и блокируем прокрутку контейнера на этот wheel.
+  // Скролла в блоке нет — wheel всегда листает слайды.
   event.preventDefault()
   void runScroll(direction)
 }
@@ -551,27 +534,8 @@ onMounted(async () => {
 // Основной контент (flex:1) со скроллом при переполнении
 .page__content {
   flex: 1 1 auto;
-  overflow: auto;
+  overflow: hidden;
   min-height: 0; // важно для flex+overflow
-  overscroll-behavior: contain;
-
-  // scrollbar (WebKit)
-  &::-webkit-scrollbar {
-    width: 0.167rem; // 3px при 1rem=18px
-  }
-
-  &::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: $color-primary;
-    border-radius: 0;
-  }
-
-  // scrollbar (Firefox)
-  scrollbar-color: #{$color-primary} transparent;
-  scrollbar-width: thin;
 }
 
 // Футер в потоке: высота от контента, линия от низа 0.6rem
@@ -709,10 +673,5 @@ onMounted(async () => {
     }
   }
 
-  .page__content {
-    &::-webkit-scrollbar {
-      width: 0.214rem; // 3px при 1rem=14px
-    }
-  }
 }
 </style>
