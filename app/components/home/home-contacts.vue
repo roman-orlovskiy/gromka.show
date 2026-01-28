@@ -8,6 +8,60 @@
       <div class="home-contacts__panel" :class="panelClasses">
         <form class="home-contacts__form" @submit.prevent="submit">
           <div class="home-contacts__grid">
+            <div class="home-contacts__links" :class="linksClasses" aria-label="contacts">
+              <a class="home-contacts__link" :href="mailtoHref">
+                <span class="home-contacts__link-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" focusable="false" aria-hidden="true">
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M15.374 12.718L19.88 9.663C20.581 9.189 21 8.398 21 7.552V7.552C21 6.142 19.858 5 18.449 5H5.566C4.157 5 3.015 6.142 3.015 7.551V7.551C3.015 8.397 3.434 9.188 4.135 9.663L8.641 12.718C10.674 14.096 13.341 14.096 15.374 12.718V12.718Z"
+                      stroke="currentColor"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <path
+                      d="M3 7.551V17C3 18.657 4.343 20 6 20H18C19.657 20 21 18.657 21 17V7.552"
+                      stroke="currentColor"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </span>
+                <span class="home-contacts__link-text">{{ t('contacts.links.email') }}</span>
+              </a>
+
+              <a
+                class="home-contacts__link"
+                :href="t('contacts.links.telegramUrl')"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <span class="home-contacts__link-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" focusable="false" aria-hidden="true">
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M14.644 19.908L20.1 5.188C20.397 4.386 19.616 3.606 18.815 3.903L4.09 9.363C3.169 9.705 3.241 11.031 4.194 11.27L11.028 12.987L12.735 19.803C12.975 20.757 14.302 20.83 14.644 19.908V19.908Z"
+                      stroke="currentColor"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <path
+                      d="M19.87 4.13L11.03 12.99"
+                      stroke="currentColor"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </span>
+                <span class="home-contacts__link-text">{{ t('contacts.links.telegramLabel') }}</span>
+              </a>
+            </div>
             <div class="home-contacts__field">
               <input
                 id="contact-name"
@@ -73,18 +127,6 @@
             <p v-if="isSuccess" class="home-contacts__success">{{ t('contacts.success') }}</p>
           </div>
         </form>
-      </div>
-
-      <div class="home-contacts__links" :class="linksClasses" aria-label="contacts">
-        <a class="home-contacts__link" :href="mailtoHref">{{ t('contacts.links.email') }}</a>
-        <a
-          class="home-contacts__link"
-          :href="t('contacts.links.telegramUrl')"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          {{ t('contacts.links.telegramLabel') }}
-        </a>
       </div>
     </div>
   </section>
@@ -300,7 +342,7 @@ const submit = async () => {
   &__grid {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     width: 100%;
     gap: 0.2rem;
     max-width: 22rem;
@@ -400,10 +442,10 @@ const submit = async () => {
 
   &__links {
     display: flex;
-    gap: 1.111rem;
-    align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.667rem;
+    width: 100%;
     transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1),
       transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     will-change: opacity, transform;
@@ -416,16 +458,38 @@ const submit = async () => {
   }
 
   &__link {
+    width: 100%;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.667rem;
     font-size: 0.926rem;
-    font-family: $font-inter;
     font-weight: $font-weight-medium;
-    color: $color-primary;
+    color: $color-black;
     text-decoration: none;
     transition: opacity 0.18s ease;
 
     &:hover {
       opacity: 0.85;
     }
+  }
+
+  &__link-icon {
+    width: 1.852rem;
+    height: 1.852rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: $color-black;
+
+    svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+  }
+
+  &__link-text {
+    display: inline-block;
   }
 
   &--dark {
@@ -461,6 +525,14 @@ const submit = async () => {
         background-color: rgba(0, 0, 0, 0.22) !important;
         transition: background-color 5000s ease-in-out 0s;
       }
+    }
+
+    .home-contacts__link {
+      color: $color-white;
+    }
+
+    .home-contacts__link-icon {
+      color: $color-white;
     }
   }
 

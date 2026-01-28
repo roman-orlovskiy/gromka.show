@@ -105,7 +105,7 @@ export default {
     },
     links: {
       email: 'info@gromka.show',
-      telegramLabel: 'Telegram: @orlovskiy_rl',
+      telegramLabel: '@orlovskiy_rl',
       telegramUrl: 'https://t.me/orlovskiy_rl'
     }
   },
