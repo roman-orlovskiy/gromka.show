@@ -48,10 +48,19 @@ export default {
     title: 'What do we get?',
     items: [
       'Wow effect',
-      'Brand, artist advertising in audience phones',
-      'Post-show quizzes and giveaways possible',
-      'Any interactive mechanics'
-    ]
+      'Post-show giveaways',
+      'Post-event promo',
+      'Game mechanics'
+    ],
+    forWhom: {
+      title: 'For whom?',
+      items: [
+        'Event organizers',
+        'Audience',
+        'Brands, artists',
+        'Hosts'
+      ]
+    }
   },
   pricing: {
     title: 'Pricing',

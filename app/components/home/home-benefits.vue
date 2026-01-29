@@ -1,20 +1,31 @@
 <template>
   <section class="home-benefits" :class="rootClasses">
     <div class="home-benefits__content">
-      <h2 class="home-benefits__title">{{ t('benefits.title') }}</h2>
-      <ul class="home-benefits__list">
-        <li
-          v-for="(item, idx) in items"
-          :key="idx"
-          class="home-benefits__item"
-          :class="[
-            itemClasses[idx],
-            { 'home-benefits__item--secondary': idx === 1 }
-          ]"
-        >
-          <span class="home-benefits__item-text" v-html="item" />
-        </li>
-      </ul>
+      <div class="home-benefits__inline">
+        <div class="home-benefits__inline-inner">
+          <div class="home-benefits__titles">
+            <span class="home-benefits__title">{{ t('benefits.title') }}</span>
+            <span class="home-benefits__title">{{ t('benefits.forWhom.title') }}</span>
+          </div>
+
+          <div class="home-benefits__lines">
+            <div
+              v-for="(row, idx) in tableRows"
+              :key="idx"
+              class="home-benefits__line"
+              :class="[
+                rowClasses[idx],
+              { 'home-benefits__line--primary': idx === 2 }
+              ]"
+            >
+              <span
+                class="home-benefits__line-text"
+                v-html="`${row.left} — ${row.right}`"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
 
       <div class="home-benefits__mouse" @click="emit('next')">
         <img class="home-benefits__mouse-icon" :src="mouseIcon" alt="" />
@@ -48,12 +59,26 @@ const items = computed(() => [
   t('benefits.items.3')
 ])
 
+const forWhomItems = computed(() => [
+  t('benefits.forWhom.items.0'),
+  t('benefits.forWhom.items.1'),
+  t('benefits.forWhom.items.2'),
+  t('benefits.forWhom.items.3')
+])
+
+const tableRows = computed(() => (
+  items.value.map((left, idx) => ({
+    left,
+    right: forWhomItems.value[idx] ?? ''
+  }))
+))
+
 // Вычисляемые классы для элементов списка (появляются с паузой 350мс каждый)
 // Логика как в других слайдах: phase 0 = всё видно, большая phase = скрыто
 // idx=0 (первый) скрывается при phase >= 4, idx=3 (последний) скрывается при phase >= 1
-const itemClasses = computed(() => 
-  items.value.map((_, idx) => ({
-    'home-benefits__item--hidden': (props.phase ?? 0) >= (items.value.length - idx)
+const rowClasses = computed(() =>
+  tableRows.value.map((_, idx) => ({
+    'home-benefits__line--hidden': (props.phase ?? 0) >= (tableRows.value.length - idx)
   }))
 )
 </script>
@@ -73,38 +98,64 @@ const itemClasses = computed(() =>
     text-align: center;
     padding: 2rem;
     width: 100%;
-    max-width: 56rem;
+    max-width: 100rem;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 2rem;
   }
 
+  &__inline {
+    width: 100%;
+    max-width: 72rem;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+  }
+
+  &__inline-inner {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: max-content;
+    max-width: 100%;
+    text-align: left;
+  }
+
+  &__titles {
+    display: flex;
+    justify-content: flex-start;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    width: 100%;
+  }
+
   &__title {
-    margin: 0;
     font-size: 2.7rem;
     color: $color-primary;
     font-weight: $font-weight-medium;
     font-family: $font-default;
+    text-align: left;
+    line-height: 1.15;
   }
 
-  &__list {
-    margin: 0;
-    padding: 0;
-    list-style: none;
+  &__lines {
     display: flex;
     flex-direction: column;
-    gap: 1.333rem;
-    width: 100%;
-    max-width: 41.8rem;
+    gap: 1rem;
+    width: max-content;
+    max-width: 100%;
+    align-self: center;
   }
 
-  &__item {
-    font-size: 1.389rem;
+  &__line {
+    font-size: 1rem;
     font-family: $font-inter;
     font-weight: $font-weight-regular;
-    color: $color-black;
     line-height: 1.6;
+    color: $color-black;
+    text-align: left;
     transform: translateY(0);
     transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1),
       transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
@@ -119,17 +170,31 @@ const itemClasses = computed(() =>
     &--secondary {
       color: $color-secondary;
     }
+
+    &--primary {
+      color: $color-primary;
+    }
+  }
+
+  &__line-text {
+    min-width: 0;
+    word-break: break-word;
+    white-space: nowrap;
   }
 
   &--dark {
     color: $color-white;
 
-    .home-benefits__item {
+    .home-benefits__line {
       color: $color-white;
+    }
+    
+    .home-benefits__line--secondary {
+      color: $color-secondary;
+    }
 
-      &--secondary {
-        color: $color-secondary;
-      }
+    .home-benefits__line--primary {
+      color: $color-primary;
     }
   }
 
@@ -154,12 +219,21 @@ const itemClasses = computed(() =>
       padding: 1.333rem;
     }
 
+    &__titles {
+      justify-content: flex-start;
+      gap: 1rem;
+    }
+
     &__title {
       font-size: 2.143rem;
     }
 
-    &__item {
-      font-size: 1.143rem;
+    &__line {
+      font-size: 0.733rem;
+    }
+
+    &__line-text {
+      white-space: normal;
     }
   }
 }
