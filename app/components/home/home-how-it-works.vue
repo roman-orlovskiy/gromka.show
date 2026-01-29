@@ -327,6 +327,7 @@ const steps: ReadonlyArray<Step> = [
 
 <style lang="scss" scoped>
 @use "@/assets/scss/variables.scss" as *;
+@use "sass:math";
 
 .home-how-it-works {
   // локальные SCSS-переменные (не CSS custom properties)
@@ -336,8 +337,8 @@ const steps: ReadonlyArray<Step> = [
   $nav-icon-size: 2.222rem;
   $sound-size: 3.556rem;
   $sound-icon-size: 1.667rem;
-  $nav-edge-shift: ($nav-size - $nav-icon-size) / 2;
-  $sound-edge-shift: ($sound-size - $sound-icon-size) / 2;
+  $nav-edge-shift: math.div(($nav-size - $nav-icon-size), 2);
+  $sound-edge-shift: math.div(($sound-size - $sound-icon-size), 2);
 
   width: 100%;
   height: 100%;
@@ -677,11 +678,8 @@ const steps: ReadonlyArray<Step> = [
     $video-inset-y: 0.667rem;
     $nav-size: 3.111rem;
     $sound-size: 3.111rem;
-    $nav-edge-shift: ($nav-size - $nav-icon-size) / 2;
-    $sound-edge-shift: ($sound-size - $sound-icon-size) / 2;
-
-    &__video-wrap {
-    }
+    $nav-edge-shift: math.div(($nav-size - $nav-icon-size), 2);
+    $sound-edge-shift: math.div(($sound-size - $sound-icon-size), 2);
 
     &__content {
       max-width: 42rem;
