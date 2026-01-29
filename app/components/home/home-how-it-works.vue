@@ -5,21 +5,20 @@
         <h2 class="home-how-it-works__title">{{ t('howItWorks.title') }}</h2>
       </header>
 
-      <div class="home-how-it-works__stickers">
-        <div class="home-how-it-works__sticker home-how-it-works__sticker--primary" :class="stickerClasses[0]">
-          {{ t('howItWorks.stickers.browser') }}
-        </div>
-        <div class="home-how-it-works__sticker home-how-it-works__sticker--secondary" :class="stickerClasses[1]">
-          {{ t('howItWorks.stickers.effects') }}
-        </div>
-        <div class="home-how-it-works__sticker home-how-it-works__sticker--thirdary" :class="stickerClasses[2]">
-          {{ t('howItWorks.stickers.sync') }}
-        </div>
-      </div>
-
       <div
         class="home-how-it-works__video-wrap"
       >
+        <div class="home-how-it-works__stickers">
+          <div class="home-how-it-works__sticker home-how-it-works__sticker--primary" :class="stickerClasses[0]">
+            {{ t('howItWorks.stickers.browser') }}
+          </div>
+          <div class="home-how-it-works__sticker home-how-it-works__sticker--secondary" :class="stickerClasses[1]">
+            {{ t('howItWorks.stickers.effects') }}
+          </div>
+          <div class="home-how-it-works__sticker home-how-it-works__sticker--thirdary" :class="stickerClasses[2]">
+            {{ t('howItWorks.stickers.sync') }}
+          </div>
+        </div>
         <button
           type="button"
           class="home-how-it-works__nav home-how-it-works__nav--prev"
@@ -112,8 +111,8 @@
         <article v-for="(step, idx) in steps" :key="step.n" class="home-how-it-works__step" :class="stepClasses[idx]">
           <div class="home-how-it-works__step-top">
             <span class="home-how-it-works__step-index">{{ step.n }}</span>
+            <h3 class="home-how-it-works__step-title">{{ t(step.titleKey) }}</h3>
           </div>
-          <h3 class="home-how-it-works__step-title">{{ t(step.titleKey) }}</h3>
           <p class="home-how-it-works__step-text" v-html="t(step.textKey)" />
         </article>
       </div>
@@ -330,6 +329,16 @@ const steps: ReadonlyArray<Step> = [
 @use "@/assets/scss/variables.scss" as *;
 
 .home-how-it-works {
+  // локальные SCSS-переменные (не CSS custom properties)
+  $video-inset-x: 1rem;
+  $video-inset-y: 0.889rem;
+  $nav-size: 3.556rem;
+  $nav-icon-size: 2.222rem;
+  $sound-size: 3.556rem;
+  $sound-icon-size: 1.667rem;
+  $nav-edge-shift: ($nav-size - $nav-icon-size) / 2;
+  $sound-edge-shift: ($sound-size - $sound-icon-size) / 2;
+
   width: 100%;
   height: 100%;
   display: flex;
@@ -344,7 +353,7 @@ const steps: ReadonlyArray<Step> = [
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 2rem;
+    gap: 1rem;
   }
 
   &__header {
@@ -356,7 +365,7 @@ const steps: ReadonlyArray<Step> = [
 
   &__title {
     margin: 0;
-    font-size: 2.7rem;
+    font-size: 2.077rem; // 2.7rem / 1.3 ≈ 2.077rem
     color: $color-primary;
     font-weight: $font-weight-medium;
     font-family: $font-default;
@@ -382,8 +391,8 @@ const steps: ReadonlyArray<Step> = [
     top: 50%;
     transform: translateY(-50%);
     z-index: 5;
-    width: 3.556rem; // 64px при базовом 18px
-    height: 3.556rem; // 64px при базовом 18px
+    width: $nav-size; // 64px при базовом 18px
+    height: $nav-size; // 64px при базовом 18px
     border-radius: 999rem;
     border: 0;
     background: transparent;
@@ -405,24 +414,28 @@ const steps: ReadonlyArray<Step> = [
     }
 
     &--prev {
-      left: 1rem;
+      left: calc(
+        #{$video-inset-x} - #{$nav-edge-shift}
+      );
     }
 
     &--next {
-      right: 1rem;
+      right: calc(
+        #{$video-inset-x} - #{$nav-edge-shift}
+      );
     }
   }
 
   &__nav-icon {
-    width: 2.222rem; // 40px
-    height: 2.222rem; // 40px
+    width: $nav-icon-size; // 40px
+    height: $nav-icon-size; // 40px
     display: block;
   }
 
   &__sound {
     z-index: 5;
-    width: 3.556rem; // 64px при базовом 18px
-    height: 3.556rem; // 64px при базовом 18px
+    width: $sound-size; // 64px при базовом 18px
+    height: $sound-size; // 64px при базовом 18px
     border-radius: 999rem;
     border: 0;
     background: transparent;
@@ -444,8 +457,8 @@ const steps: ReadonlyArray<Step> = [
   }
 
   &__sound-icon {
-    width: 1.667rem; // 30px
-    height: 1.667rem; // 30px
+    width: $sound-icon-size; // 30px
+    height: $sound-icon-size; // 30px
     display: block;
   }
 
@@ -476,14 +489,18 @@ const steps: ReadonlyArray<Step> = [
   }
 
   &__stickers {
-    width: 100%;
-    max-width: 41.8rem;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    z-index: 6;
     pointer-events: none;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
-    gap: 0.667rem;
+    gap: 0.444rem;
     flex-wrap: nowrap;
+    padding: $video-inset-y $video-inset-x;
   }
 
   &__caption {
@@ -492,11 +509,11 @@ const steps: ReadonlyArray<Step> = [
     right: 0;
     bottom: 0;
     z-index: 4;
-    padding: 0.889rem 1rem; // 16px 18px
+    padding: $video-inset-y $video-inset-x; // 16px 18px
     display: grid;
     grid-template-columns: 1fr auto 1fr;
     align-items: center;
-    font-size: 1rem; // 18px
+    font-size: 0.769rem; // 1rem / 1.3 ≈ 0.769rem
     font-family: $font-default;
     font-weight: $font-weight-medium;
     color: $color-white;
@@ -515,14 +532,17 @@ const steps: ReadonlyArray<Step> = [
   &__caption .home-how-it-works__sound {
     grid-column: 3;
     justify-self: end;
+    // Выравниваем именно иконку по правому inset (кнопка больше иконки).
+    margin-right: calc(#{$sound-edge-shift} * -1);
   }
 
   &__sticker {
     padding: 0.5rem 0.833rem;
-    border-radius: 0.667rem;
-    font-size: 0.778rem;
+    border-radius: 0.444rem;
+    font-size: 0.598rem; // 0.778rem / 1.3 ≈ 0.598rem
     font-family: $font-inter;
-    color: $color-black;
+    background: $color-primary;
+    color: $color-white;
     box-shadow: 0 0.222rem 0.667rem rgba(0, 0, 0, 0.15);
     white-space: nowrap;
     transform: translateY(0);
@@ -539,17 +559,11 @@ const steps: ReadonlyArray<Step> = [
       pointer-events: none;
     }
 
-    &--primary {
-      background: $color-primary;
-      color: $color-white;
-    }
-
-    &--secondary {
-      background: $color-secondary;
-    }
-
+    // Все верхние плашки — одного (розового) цвета
+    &--primary,
+    &--secondary,
     &--thirdary {
-      background: $color-thirdary;
+      background: $color-primary;
       color: $color-white;
     }
   }
@@ -557,19 +571,19 @@ const steps: ReadonlyArray<Step> = [
   &__steps {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 0.833rem;
+    gap: 0.444rem;
     width: 100%;
     max-width: 41.8rem;
   }
 
   &__step {
-    border-radius: 1.111rem;
-    padding: 1rem 0.9rem;
+    border-radius: 0.444rem;
+    padding: 1rem 0.556rem;
     background: $color-white-light;
     border: 1px solid rgba(44, 44, 44, 0.08);
     display: flex;
     flex-direction: column;
-    gap: 0.556rem;
+    gap: 0.444rem;
     position: relative;
     transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1),
       transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
@@ -583,9 +597,11 @@ const steps: ReadonlyArray<Step> = [
   }
 
   &__step-top {
-    position: absolute;
-    top: 1rem;
-    left: 0.9rem;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 1.2em;
   }
 
   &__step-index {
@@ -593,29 +609,34 @@ const steps: ReadonlyArray<Step> = [
     align-items: center;
     justify-content: center;
     color: $color-primary;
-    font-size: 0.926rem;
+    font-size: 0.712rem; // 0.926rem / 1.3 ≈ 0.712rem
     font-family: $font-default;
     font-weight: $font-weight-bold;
     line-height: 1;
+    flex-shrink: 0;
+    position: absolute;
+    left: 0;
   }
 
   &__step-title {
     margin: 0;
-    font-size: 0.926rem;
+    font-size: 0.712rem; // 0.926rem / 1.3 ≈ 0.712rem
     font-family: $font-default;
     font-weight: $font-weight-medium;
     color: $color-black;
     line-height: 1.2;
     text-align: center;
+    width: 100%;
+    padding: 0 1.3em;
   }
 
   &__step-text {
     margin: 0;
-    font-size: 0.833rem;
+    font-size: 0.615rem; // чуть больше
     font-family: $font-inter;
     font-weight: $font-weight-regular;
     color: $color-gray-700;
-    line-height: 1.6;
+    line-height: 1.4;
     text-align: center;
   }
 
@@ -652,6 +673,16 @@ const steps: ReadonlyArray<Step> = [
   }
 
   @include layout-aspect-mobile {
+    $video-inset-x: 0.889rem;
+    $video-inset-y: 0.667rem;
+    $nav-size: 3.111rem;
+    $sound-size: 3.111rem;
+    $nav-edge-shift: ($nav-size - $nav-icon-size) / 2;
+    $sound-edge-shift: ($sound-size - $sound-icon-size) / 2;
+
+    &__video-wrap {
+    }
+
     &__content {
       max-width: 42rem;
       padding: 1.333rem;
@@ -666,22 +697,21 @@ const steps: ReadonlyArray<Step> = [
       height: 3.111rem;
 
       &--prev {
-        left: 0.667rem;
+        left: calc(#{$video-inset-x} - #{$nav-edge-shift});
       }
 
       &--next {
-        right: 0.667rem;
+        right: calc(#{$video-inset-x} - #{$nav-edge-shift});
       }
     }
 
     &__caption {
-      font-size: 0.929rem; // ~13px при базовом 14px
-      padding: 0.667rem 0.889rem;
+      font-size: 0.715rem; // 0.929rem / 1.3 ≈ 0.715rem
     }
 
     &__sound {
-      width: 3.111rem; // 43.5px при базовом 14px (моб)
-      height: 3.111rem;
+      width: $sound-size; // 43.5px при базовом 14px (моб)
+      height: $sound-size;
     }
   }
 }
