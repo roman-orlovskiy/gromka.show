@@ -1,9 +1,6 @@
 <template>
   <div class="app-background" :class="backgroundClasses" aria-hidden="true">
     <div class="app-background__dark-layer" />
-    <div class="app-background__sparkles">
-      <SparkleEffect />
-    </div>
   </div>
 </template>
 
@@ -36,20 +33,8 @@ const backgroundClasses = computed(() => ({
     pointer-events: none;
   }
 
-  &__sparkles {
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    transition: opacity 0.5s ease;
-    pointer-events: none;
-  }
-
   &--dark {
     .app-background__dark-layer {
-      opacity: 1;
-    }
-
-    .app-background__sparkles {
       opacity: 1;
     }
   }

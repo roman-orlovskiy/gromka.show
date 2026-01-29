@@ -1,5 +1,6 @@
 <template>
   <div class="page">
+    <HomeSparkles />
     <div class="page__header" aria-hidden="true" />
 
     <div class="page__content" @wheel="handleWheel">
@@ -46,6 +47,7 @@ import HomeHowItWorks from '@/components/home/home-how-it-works.vue'
 import HomeBenefits from '@/components/home/home-benefits.vue'
 import HomePricing from '@/components/home/home-pricing.vue'
 import HomeContacts from '@/components/home/home-contacts.vue'
+import HomeSparkles from '@/components/home/home-sparkles.vue'
 import { delay } from '@/utils/delay'
 
 const { t } = useI18n()
@@ -449,6 +451,7 @@ onMounted(async () => {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  position: relative;
 }
 
 // Верхний "хедер" в потоке (резервируем место под фиксированный AppHeader)
@@ -462,6 +465,8 @@ onMounted(async () => {
   flex: 1 1 auto;
   overflow: hidden;
   min-height: 0; // важно для flex+overflow
+  position: relative;
+  z-index: 1;
 }
 
 // Футер в потоке: высота от контента, линия от низа 0.6rem
@@ -469,6 +474,8 @@ onMounted(async () => {
   flex: 0 0 auto;
   width: 100%;
   padding-bottom: 0.6rem;
+  position: relative;
+  z-index: 1;
 }
 
 // Полоса переключения слайдов в стиле YouTube (на всю ширину)
