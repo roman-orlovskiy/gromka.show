@@ -160,6 +160,13 @@ const handlePointerMove = (event: PointerEvent) => {
   lastMouseMoveAtMs.value = performance.now()
 }
 
+const handleTouchMove = (event: TouchEvent) => {
+  const touch = event.touches[0] ?? event.changedTouches[0]
+  if (!touch) return
+  mouse.value = { x: touch.clientX, y: touch.clientY }
+  lastMouseMoveAtMs.value = performance.now()
+}
+
 const animateBlendTo = (target: number) => {
   if (blendRafId) window.cancelAnimationFrame(blendRafId)
 
@@ -187,6 +194,8 @@ const animateBlendTo = (target: number) => {
 onMounted(() => {
   hasFinePointer.value = window.matchMedia?.('(pointer: fine)').matches ?? false
   window.addEventListener('pointermove', handlePointerMove, { passive: true })
+  window.addEventListener('touchstart', handleTouchMove, { passive: true })
+  window.addEventListener('touchmove', handleTouchMove, { passive: true })
 
   // Запускаем вспышки с задержкой (обычно когда фон станет чёрным)
   modeBlend.value = mode.value === 'cursor' ? 1 : 0
@@ -203,6 +212,8 @@ watch(mode, (nextMode) => {
 onUnmounted(() => {
   isStopped = true
   window.removeEventListener('pointermove', handlePointerMove)
+  window.removeEventListener('touchstart', handleTouchMove)
+  window.removeEventListener('touchmove', handleTouchMove)
   if (startDelayTimeoutId) window.clearTimeout(startDelayTimeoutId)
   if (loopTimeoutId) window.clearTimeout(loopTimeoutId)
   if (blendRafId) window.cancelAnimationFrame(blendRafId)
