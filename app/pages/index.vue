@@ -594,7 +594,7 @@ onMounted(async () => {
     font-weight: $font-weight-medium;
     font-size: 0.778rem; // ~14px
     letter-spacing: 0.02em;
-    transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s ease;
+    transition: opacity 0.36s ease, transform 0.36s ease, visibility 0.36s ease;
     text-shadow: 0 0.111rem 0.444rem rgba(0, 0, 0, 0.55);
     z-index: 2;
   }
