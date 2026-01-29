@@ -610,7 +610,7 @@ const steps: ReadonlyArray<Step> = [
     align-items: center;
     justify-content: center;
     color: $color-primary;
-    font-size: 0.712rem; // 0.926rem / 1.3 ≈ 0.712rem
+    font-size: 0.926rem;
     font-family: $font-default;
     font-weight: $font-weight-bold;
     line-height: 1;
@@ -621,7 +621,7 @@ const steps: ReadonlyArray<Step> = [
 
   &__step-title {
     margin: 0;
-    font-size: 0.712rem; // 0.926rem / 1.3 ≈ 0.712rem
+    font-size: 0.926rem;
     font-family: $font-default;
     font-weight: $font-weight-medium;
     color: $color-black;
@@ -633,7 +633,7 @@ const steps: ReadonlyArray<Step> = [
 
   &__step-text {
     margin: 0;
-    font-size: 0.615rem; // чуть больше
+    font-size: 0.8rem;
     font-family: $font-inter;
     font-weight: $font-weight-regular;
     color: $color-gray-700;
@@ -642,7 +642,7 @@ const steps: ReadonlyArray<Step> = [
   }
 
   &__mouse {
-    margin-top: 1.889rem;
+    margin-top: 1rem;
     display: flex;
     justify-content: center;
     align-items: center;
