@@ -31,7 +31,7 @@ const sparklesClasses = computed(() => ({
   inset: 0;
   pointer-events: none;
   overflow: hidden;
-  z-index: 0; // ниже слоя слайдов
+  z-index: 1; // выше фонового текста, ниже слоя слайдов
   opacity: 0;
   transition: opacity 0.5s ease;
 

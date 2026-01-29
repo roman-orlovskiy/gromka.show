@@ -1,5 +1,6 @@
 <template>
   <div class="page">
+    <HomeGromkaBg :active-view-id="activeViewId" :transition-name="viewTransitionName" />
     <HomeSparkles :active-view-id="activeViewId" />
     <div class="page__header" aria-hidden="true" />
 
@@ -48,6 +49,7 @@ import HomeBenefits from '@/components/home/home-benefits.vue'
 import HomePricing from '@/components/home/home-pricing.vue'
 import HomeContacts from '@/components/home/home-contacts.vue'
 import HomeSparkles from '@/components/home/home-sparkles.vue'
+import HomeGromkaBg from '@/components/home/home-gromka-bg.vue'
 import { delay } from '@/utils/delay'
 
 const { t } = useI18n()
