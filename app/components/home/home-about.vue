@@ -54,10 +54,11 @@ const aboutVideoUrl = computed(() => `${GROMKA_STORAGE_BASE_URL}about-project.mp
     padding: 2rem;
     width: 100%;
     max-width: 56rem;
+    height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 2rem;
+    justify-content: space-between;
   }
 
   &__title {
@@ -71,12 +72,12 @@ const aboutVideoUrl = computed(() => `${GROMKA_STORAGE_BASE_URL}about-project.mp
   &__video-wrap {
     position: relative;
     width: 100%;
-    max-width: 50.134rem; // 752px * 1.2 = 902.4px при базовом 18px
+    max-width: 38.564rem; // (752px * 1.2) / 1.3 = 694.15px при базовом 18px
     border-radius: 1.333rem;
     overflow: hidden;
     background: $color-black-dark;
 
-    // Пропорции: 752 x 416.
+    // Пропорции: 752 x 416, уменьшенные в 1.3 раза.
     // Высота в % от ширины (padding-top считает % от ширины контейнера).
     &::before {
       content: "";
@@ -96,17 +97,16 @@ const aboutVideoUrl = computed(() => `${GROMKA_STORAGE_BASE_URL}about-project.mp
 
   &__description {
     margin: 0;
-    font-size: 1.5rem; // 18px
+    font-size: 1.154rem; // 1.5rem / 1.3 ≈ 1.154rem
     font-family: $font-inter;
     font-weight: $font-weight-regular;
     color: $color-white;
     line-height: 1.6;
     width: 100%;
-    max-width: 50.134rem; // совпадает с шириной видео
+    max-width: 38.564rem; // совпадает с шириной видео
   }
 
   &__mouse {
-    margin-top: 1.889rem; // 34px при базовом 18px
     display: flex;
     justify-content: center;
     align-items: center;
