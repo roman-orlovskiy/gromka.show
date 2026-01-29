@@ -600,7 +600,8 @@ onMounted(async () => {
   }
 
   &__segment:hover &__label,
-  &__segment:focus-visible &__label {
+  &__segment:focus-visible &__label,
+  &__segment--active &__label {
     opacity: 1;
     visibility: visible;
     transform: translateX(-50%) translateY(0);
