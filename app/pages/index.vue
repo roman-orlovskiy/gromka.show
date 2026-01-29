@@ -15,22 +15,24 @@
     <footer class="page__footer">
       <!-- Полоса переключения слайдов в стиле YouTube (на всю ширину) -->
       <div class="slide-nav" aria-label="slides">
-        <div ref="slideNavTrackRef" class="slide-nav__track" :style="slideNavStyle">
-          <div ref="slideNavFillRef" class="slide-nav__fill" aria-hidden="true" />
-          <button
-            v-for="(viewId, index) in viewOrder"
-            :key="viewId"
-            :ref="(el) => setSegmentRef(el, index)"
-            type="button"
-            class="slide-nav__segment"
-            :class="segmentClasses[index]"
-            :aria-label="t(viewTitleKeys[index]!)"
-            @click="goToView(viewId)"
-          >
-            <span class="slide-nav__label">
-              {{ t(viewTitleKeys[index]!) }}
-            </span>
-          </button>
+        <div class="slide-nav__inner">
+          <div class="slide-nav__track" :style="slideNavStyle">
+            <button
+              v-for="(viewId, index) in viewOrder"
+              :key="viewId"
+              type="button"
+              class="slide-nav__segment"
+              :class="segmentClasses[index]"
+              :aria-label="t(viewTitleKeys[index]!)"
+              @click="goToView(viewId)"
+            >
+              <span class="slide-nav__label">
+                {{ t(viewTitleKeys[index]!) }}
+              </span>
+            </button>
+
+            <div class="slide-nav__fill" aria-hidden="true" />
+          </div>
         </div>
       </div>
     </footer>
@@ -76,10 +78,6 @@ const navAnimMs = ref(300)
 const VIEW_TRANSITION_MS = 300
 const AFTER_ENTER_UNLOCK_MS = 208
 
-const slideNavTrackRef = ref<HTMLElement | null>(null)
-const slideNavFillRef = ref<HTMLElement | null>(null)
-const segmentRefs = ref<Array<HTMLElement | null>>([])
-
 const handleWheel = (event: WheelEvent) => {
   if (Math.abs(event.deltaY) < 8) return
   const direction: 'down' | 'up' = event.deltaY > 0 ? 'down' : 'up'
@@ -89,70 +87,6 @@ const handleWheel = (event: WheelEvent) => {
   void runScroll(direction)
 }
 
-const setSegmentRef = (el: unknown, index: number) => {
-  const anyEl = el as any
-  segmentRefs.value[index] = ((anyEl?.$el ?? anyEl) as HTMLElement | null)
-}
-
-const getRectRelativeToTrack = (el: HTMLElement) => {
-  const track = slideNavTrackRef.value
-  if (!track) return null
-  const trackRect = track.getBoundingClientRect()
-  const rect = el.getBoundingClientRect()
-  return {
-    left: rect.left - trackRect.left,
-    width: rect.width
-  }
-}
-
-const setFillToIndex = (index: number) => {
-  const fill = slideNavFillRef.value
-  const el = segmentRefs.value[index]
-  const r = fill && el ? getRectRelativeToTrack(el) : null
-  if (!fill || !r) return
-  fill.style.transform = `translateX(${r.left}px)`
-  fill.style.width = `${r.width}px`
-}
-
-const animateFill = (fromIndex: number, toIndex: number) => {
-  const fill = slideNavFillRef.value
-  const fromEl = segmentRefs.value[fromIndex]
-  const toEl = segmentRefs.value[toIndex]
-  if (!fill || !fromEl || !toEl) return
-
-  const from = getRectRelativeToTrack(fromEl)
-  const to = getRectRelativeToTrack(toEl)
-  if (!from || !to) return
-
-  const w = to.width
-  const a = from.left
-  const b = to.left
-  const stretchLeft = Math.min(a, b)
-  const stretchWidth = Math.abs(b - a) + w
-
-  try {
-    fill.getAnimations().forEach((a) => a.cancel())
-  } catch {
-    // ignore
-  }
-
-  fill.animate(
-    [
-      { transform: `translateX(${a}px)`, width: `${w}px` },
-      { transform: `translateX(${stretchLeft}px)`, width: `${stretchWidth}px`, offset: 0.5 },
-      { transform: `translateX(${b}px)`, width: `${w}px` }
-    ],
-    {
-      duration: navAnimMs.value,
-      easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
-      fill: 'forwards'
-    }
-  )
-
-  // фиксируем конечное состояние (после cancel/resize)
-  fill.style.transform = `translateX(${b}px)`
-  fill.style.width = `${w}px`
-}
 
 const handleScroll = (event: WheelEvent) => {
   if (Math.abs(event.deltaY) < 8) return
@@ -448,7 +382,9 @@ const getViewTitleKey = (viewId: ViewId): ViewTitleKey => {
 const viewTitleKeys = computed<ReadonlyArray<ViewTitleKey>>(() => viewOrder.map(getViewTitleKey))
 
 const slideNavStyle = computed(() => ({
-  '--nav-anim-ms': `${navAnimMs.value}ms`
+  '--nav-anim-ms': `${navAnimMs.value}ms`,
+  '--segments-count': String(viewOrder.length),
+  '--active-index': String(navIndex.value)
 }))
 
 const segmentClasses = computed(() => (
@@ -486,30 +422,9 @@ const goToView = async (targetViewId: ViewId) => {
   activeViewId.value = targetViewId
 }
 
-watch(navIndex, async (to, from) => {
-  await nextTick()
-  // первый рендер
-  if (from === to) {
-    setFillToIndex(to)
-    return
-  }
-  animateFill(from, to)
-})
-
 onMounted(async () => {
   await nextTick()
   navIndex.value = activeIndex.value
-  setFillToIndex(navIndex.value)
-
-  const onResize = async () => {
-    await nextTick()
-    setFillToIndex(navIndex.value)
-  }
-  window.addEventListener('resize', onResize, { passive: true })
-
-  onBeforeUnmount(() => {
-    window.removeEventListener('resize', onResize)
-  })
 })
 
 // Фон/тема переключаются глобально в `app/app.vue`
@@ -558,12 +473,15 @@ onMounted(async () => {
     cursor: pointer;
   }
 
+  &__inner {
+    width: 100%;
+    padding: 0 1rem;
+  }
+
   &__track {
     position: relative;
-    height: 2.444rem; // зона ховера/клика
+    height: 2.6rem; // зона ховера/клика
     display: flex;
-    gap: 0.111rem; // 2px при 1rem=18px
-    padding: 0 1rem;
     align-items: stretch;
   }
 
@@ -572,11 +490,13 @@ onMounted(async () => {
     left: 0;
     bottom: 0;
     height: 0.444rem; // толщина линии
-    width: 0;
+    width: calc(100% / var(--segments-count));
     background: $color-secondary;
     border-radius: 0;
     pointer-events: none;
-    will-change: transform, width;
+    transform: translateX(calc(var(--active-index) * 100%));
+    transition: transform var(--nav-anim-ms) cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform;
   }
 
   &__segment {
@@ -602,6 +522,22 @@ onMounted(async () => {
       transition: background-color 0.18s ease;
     }
 
+    // визуальный разделитель между сегментами (вместо gap, чтобы fill был чисто процентным)
+    &::after {
+      content: "";
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      width: 0.056rem; // ~1px при 1rem=18px
+      height: 0.444rem; // толщина линии
+      background: rgba($color-secondary, 0.16);
+      pointer-events: none;
+    }
+
+    &:last-child::after {
+      display: none;
+    }
+
     &:hover,
     &:focus-visible {
       outline: none;
@@ -623,8 +559,9 @@ onMounted(async () => {
   &__label {
     position: absolute;
     left: 50%;
-    bottom: calc(100% + 0.444rem); // ~8px
-    transform: translateX(-50%) translateY(0.333rem);
+    // держим текст ВНУТРИ hover-зоны (внутри трека), ближе к нижней линии
+    bottom: 1.6rem;
+    transform: translateX(-50%) translateY(0.222rem);
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
@@ -640,6 +577,7 @@ onMounted(async () => {
     letter-spacing: 0.02em;
     transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s ease;
     text-shadow: 0 0.111rem 0.444rem rgba(0, 0, 0, 0.55);
+    z-index: 2;
   }
 
   &__segment:hover &__label,
@@ -654,9 +592,11 @@ onMounted(async () => {
   .slide-nav {
     height: 2.286rem;
 
-    &__track {
-      gap: 0.143rem; // 2px при 1rem=14px
+    &__inner {
       padding: 0 0.667rem;
+    }
+
+    &__track {
     }
 
     &__fill {
@@ -669,8 +609,14 @@ onMounted(async () => {
       height: 0.428rem;
     }
 
+    &__segment::after {
+      width: 0.071rem; // ~1px при 1rem=14px
+      height: 0.428rem;
+    }
+
     &__label {
       font-size: 0.786rem; // ~11px при базовом 14px
+      bottom: 0.535rem;
     }
   }
 
