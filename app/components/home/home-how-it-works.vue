@@ -660,7 +660,7 @@ const steps: ReadonlyArray<Step> = [
     color: $color-white;
 
     .home-how-it-works__step {
-      background: rgba(255, 255, 255, 0.06);
+      background: $color-gray-800;
       border-color: rgba(255, 255, 255, 0.12);
     }
 

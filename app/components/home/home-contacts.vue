@@ -519,7 +519,7 @@ const submit = async () => {
 
     .home-contacts__input,
     .home-contacts__textarea {
-      background: rgba(0, 0, 0, 0.22);
+      background: $color-black-dark;
       border-color: rgba(255, 255, 255, 0.14);
       color: $color-white;
 
@@ -531,11 +531,11 @@ const submit = async () => {
       &:-webkit-autofill:hover,
       &:-webkit-autofill:focus,
       &:-webkit-autofill:active {
-        -webkit-box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0.22) inset !important;
-        box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0.22) inset !important;
+        -webkit-box-shadow: 0 0 0 1000px $color-black inset !important;
+        box-shadow: 0 0 0 1000px $color-black inset !important;
         -webkit-text-fill-color: $color-white !important;
         caret-color: $color-white;
-        background-color: rgba(0, 0, 0, 0.22) !important;
+        background-color: $color-black !important;
         transition: background-color 5000s ease-in-out 0s;
       }
     }

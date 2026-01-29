@@ -258,7 +258,7 @@ const planClasses = computed(() => {
     color: $color-white;
 
     .home-pricing__plan {
-      background: rgba(255, 255, 255, 0.06);
+      background: $color-black-light;
       border-color: rgba(255, 255, 255, 0.12);
 
       &--primary {

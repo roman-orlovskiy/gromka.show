@@ -1,6 +1,6 @@
 <template>
   <div class="page">
-    <HomeSparkles />
+    <HomeSparkles :active-view-id="activeViewId" />
     <div class="page__header" aria-hidden="true" />
 
     <div class="page__content" @wheel="handleWheel">
@@ -458,6 +458,8 @@ onMounted(async () => {
 .page__header {
   flex: 0 0 auto;
   height: 5.333rem; // примерно: 2rem + line-height + 2rem
+  position: relative;
+  z-index: 10;
 }
 
 // Основной контент (flex:1) со скроллом при переполнении
@@ -466,7 +468,7 @@ onMounted(async () => {
   overflow: hidden;
   min-height: 0; // важно для flex+overflow
   position: relative;
-  z-index: 1;
+  z-index: 30;
 }
 
 // Футер в потоке: высота от контента, линия от низа 0.6rem
