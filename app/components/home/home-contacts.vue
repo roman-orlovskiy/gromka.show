@@ -6,7 +6,7 @@
       </header>
 
       <div class="home-contacts__panel" :class="panelClasses">
-        <form class="home-contacts__form" @submit.prevent="submit">
+        <form class="home-contacts__form" novalidate @submit.prevent="submit">
           <div class="home-contacts__grid">
             <div class="home-contacts__links" :class="linksClasses" aria-label="contacts">
               <a class="home-contacts__link" :href="mailtoHref">
