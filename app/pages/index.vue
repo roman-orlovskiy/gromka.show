@@ -99,6 +99,33 @@ const handleWheel = (event: WheelEvent) => {
   void runScroll(direction)
 }
 
+const isEditableTarget = (el: Element | null): boolean => {
+  if (!el) return false
+  const htmlEl = el as HTMLElement
+  if (htmlEl.isContentEditable) return true
+  const tag = el.tagName.toLowerCase()
+  return tag === 'input' || tag === 'textarea' || tag === 'select'
+}
+
+const handleKeydown = (event: KeyboardEvent) => {
+  if (event.defaultPrevented) return
+  if (event.repeat) return
+  if (event.metaKey || event.ctrlKey || event.altKey) return
+
+  // Не вмешиваемся в управление курсором/выделением в полях ввода
+  if (isEditableTarget(document.activeElement)) return
+
+  if (event.key === 'ArrowDown' || event.key === 'ArrowRight') {
+    event.preventDefault()
+    void runScroll('down')
+    return
+  }
+  if (event.key === 'ArrowUp' || event.key === 'ArrowLeft') {
+    event.preventDefault()
+    void runScroll('up')
+  }
+}
+
 
 const handleScroll = (event: WheelEvent) => {
   if (Math.abs(event.deltaY) < 8) return
@@ -437,6 +464,11 @@ const goToView = async (targetViewId: ViewId) => {
 onMounted(async () => {
   await nextTick()
   navIndex.value = activeIndex.value
+  window.addEventListener('keydown', handleKeydown, { passive: false })
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('keydown', handleKeydown)
 })
 
 // Фон/тема переключаются глобально в `app/app.vue`
