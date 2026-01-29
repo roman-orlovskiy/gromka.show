@@ -113,5 +113,8 @@ export default {
     ru: 'RUS',
     en: 'ENG',
     switch: 'Switch language'
+  },
+  header: {
+    writeUs: 'Contact us'
   }
 }
