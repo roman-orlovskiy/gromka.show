@@ -1,7 +1,13 @@
 <template>
   <header class="app-header" :class="headerClasses">
     <div class="app-header__inner">
-      <div class="app-header__logo" :class="logoClasses">GROMKA</div>
+      <div 
+        class="app-header__logo" 
+        :class="logoClasses"
+        @click="handleLogoClick"
+      >
+        GROMKA
+      </div>
 
       <div class="app-header__switcher" :class="switcherClasses">
         <LanguageSwitcher />
@@ -14,6 +20,18 @@
 const mainStore = useMainStore()
 const settingsStore = useSettingsStore()
 const { value: heroHeaderState } = useAnimationChannel('header.hero', 0)
+
+const route = useRoute()
+
+const handleLogoClick = async () => {
+  // Если мы не на главной — сначала переходим на неё
+  if (route.path !== '/') {
+    await navigateTo('/')
+  }
+
+  // Затем просим главную страницу выполнить переход к первому слайду
+  mainStore.requestNavigateToView('hero')
+}
 
 const isHeroView = computed(() => mainStore.activeViewId === 'hero')
 const isHeaderExpanded = computed(() => !isHeroView.value || heroHeaderState.value === 1)
@@ -60,10 +78,19 @@ const switcherClasses = computed(() => ({
       transform 0.5s cubic-bezier(0.4, 0, 0.2, 1),
       color 0.5s ease;
     pointer-events: auto;
+    cursor: pointer;
+
+    &:hover {
+      opacity: 0.7;
+    }
 
     &--visible {
       opacity: 1;
       transform: translate3d(0, 0, 0);
+
+      &:hover {
+        opacity: 0.7;
+      }
     }
   }
 

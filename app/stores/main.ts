@@ -30,6 +30,15 @@ export const useMainStore = defineStore('main', () => {
     activeViewId.value = viewId
   }
 
+  // Запрос навигации к конкретному слайду (например, клик по лого в хедере).
+  // Страница `app/pages/index.vue` слушает nonce и выполняет переход через `goToView`.
+  const navigationRequestViewId: Ref<string | null> = ref(null)
+  const navigationRequestNonce: Ref<number> = ref(0)
+  const requestNavigateToView = (viewId: string): void => {
+    navigationRequestViewId.value = viewId
+    navigationRequestNonce.value += 1
+  }
+
   return {
     modalType,
     modalParams,
@@ -37,6 +46,9 @@ export const useMainStore = defineStore('main', () => {
     openModal,
     closeModal,
     activeViewId,
-    setActiveViewId
+    setActiveViewId,
+    navigationRequestViewId,
+    navigationRequestNonce,
+    requestNavigateToView
   }
 })

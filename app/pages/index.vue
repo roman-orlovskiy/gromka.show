@@ -67,6 +67,16 @@ watch(activeViewId, (newViewId) => {
   mainStore.setActiveViewId(newViewId)
 }, { immediate: true })
 
+// Переходы, инициированные из глобальных компонентов (например, клик по лого в хедере)
+watch(() => mainStore.navigationRequestNonce, async () => {
+  const requestedViewId = mainStore.navigationRequestViewId
+  if (!requestedViewId) return
+
+  if (!viewOrder.includes(requestedViewId as ViewId)) return
+
+  await goToView(requestedViewId as ViewId)
+})
+
 let isAnimating = false
 const lastNavDirection = ref<'down' | 'up'>('down')
 const pendingEnterViewId = ref<ViewId | null>(null)
@@ -594,9 +604,6 @@ onMounted(async () => {
 
     &__inner {
       padding: 0 0.667rem;
-    }
-
-    &__track {
     }
 
     &__fill {
