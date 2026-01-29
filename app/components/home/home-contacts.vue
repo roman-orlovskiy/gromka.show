@@ -70,10 +70,9 @@
                 :class="inputClasses.name"
                 type="text"
                 autocomplete="name"
-                :placeholder="t('contacts.fields.name.label')"
+                :placeholder="placeholders.name"
                 @blur="touch('name')"
               />
-              <div v-if="fieldErrorText.name" class="home-contacts__error">{{ fieldErrorText.name }}</div>
             </div>
 
             <div class="home-contacts__field">
@@ -85,10 +84,9 @@
                 type="email"
                 autocomplete="email"
                 inputmode="email"
-                :placeholder="t('contacts.fields.email.label')"
+                :placeholder="placeholders.email"
                 @blur="touch('email')"
               />
-              <div v-if="fieldErrorText.email" class="home-contacts__error">{{ fieldErrorText.email }}</div>
             </div>
 
             <div class="home-contacts__field">
@@ -100,10 +98,9 @@
                 type="tel"
                 autocomplete="tel"
                 inputmode="tel"
-                :placeholder="t('contacts.fields.phone.label')"
+                :placeholder="placeholders.phone"
                 @blur="touch('phone')"
               />
-              <div v-if="fieldErrorText.phone" class="home-contacts__error">{{ fieldErrorText.phone }}</div>
             </div>
 
             <div class="home-contacts__field home-contacts__field--full">
@@ -113,10 +110,9 @@
                 class="home-contacts__textarea"
                 :class="inputClasses.description"
                 rows="4"
-                :placeholder="t('contacts.fields.description.label')"
+                :placeholder="placeholders.description"
                 @blur="touch('description')"
               />
-              <div v-if="fieldErrorText.description" class="home-contacts__error">{{ fieldErrorText.description }}</div>
             </div>
           </div>
 
@@ -206,6 +202,23 @@ const fieldErrorText = computed<Record<FieldKey, string>>(() => {
   }
 })
 
+const placeholders = computed<Record<FieldKey, string>>(() => {
+  const label = {
+    name: t('contacts.fields.name.label'),
+    email: t('contacts.fields.email.label'),
+    phone: t('contacts.fields.phone.label'),
+    description: t('contacts.fields.description.label')
+  }
+
+  const err = fieldErrorText.value
+  return {
+    name: err.name ? `${label.name} ${err.name}` : label.name,
+    email: err.email ? `${label.email} ${err.email}` : label.email,
+    phone: err.phone ? `${label.phone} ${err.phone}` : label.phone,
+    description: err.description ? `${label.description} ${err.description}` : label.description
+  }
+})
+
 const inputClasses = computed<Record<FieldKey, Record<string, boolean>>>(() => {
   const e = rawErrors.value
   return {
@@ -271,8 +284,24 @@ const submit = async () => {
 
 <style lang="scss" scoped>
 @use "@/assets/scss/variables.scss" as *;
+@use "sass:math";
 
 .home-contacts {
+  // локальные SCSS-переменные (масштаб 1.3)
+  $k: 1.3;
+  // отступы между полями: увеличить в 2 раза
+  $field-gap: 1.232rem; // (0.4rem / 1.3) * 4
+  $grid-gap: 0.616rem; // (0.2rem / 1.3) * 4
+  $input-font: math.div(1rem, $k);
+  $input-padding-y: math.div(1.722rem, $k);
+  $input-padding-x: math.div(3.333rem, $k);
+  $input-radius: math.div(1rem, $k);
+  $textarea-min-h: math.div(8.889rem, $k);
+  // расстояние между mail и tg больше
+  $links-gap: 1rem;
+  // иконку к тексту — чуть ближе
+  $link-inner-gap: 0.333rem;
+
   width: 100%;
   height: 100%;
   display: flex;
@@ -342,19 +371,17 @@ const submit = async () => {
   &__grid {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
     width: 100%;
-    gap: 0.2rem;
+    gap: $grid-gap;
     max-width: 22rem;
   }
 
   &__field {
     display: flex;
     flex-direction: column;
-    gap: 0.444rem;
+    gap: $field-gap;
     width: 100%;
-    position: relative;
-    padding-bottom: 1.444rem;
 
     &--full {
       width: 100%;
@@ -371,14 +398,14 @@ const submit = async () => {
   &__input,
   &__textarea {
     width: 100%;
-    border-radius: 1rem;
+    border-radius: $input-radius;
     border: 1px solid rgba(44, 44, 44, 0.12);
     background: rgba(255, 255, 255, 0.9);
     color: $color-black;
     font-family: $font-default;
     font-weight: $font-weight-medium;
-    font-size: 1rem;
-    padding: 1.722rem 3.333rem;
+    font-size: $input-font;
+    padding: $input-padding-y $input-padding-x;
     outline: none;
     transition: border-color 0.18s ease, box-shadow 0.18s ease;
 
@@ -399,23 +426,7 @@ const submit = async () => {
 
   &__textarea {
     resize: vertical;
-    min-height: 8.889rem;
-  }
-
-  &__error {
-    font-size: 0.7rem;
-    font-family: $font-inter;
-    font-weight: $font-weight-light;
-    color: $color-primary;
-    line-height: 1.3;
-    position: absolute;
-    left: 50%;
-    bottom: 0;
-    transform: translateX(-50%);
-    width: 100%;
-    text-align: center;
-    pointer-events: none;
-    bottom: 0.2rem;
+    min-height: $textarea-min-h;
   }
 
   &__actions {
@@ -442,12 +453,12 @@ const submit = async () => {
 
   &__links {
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.667rem;
+    flex-direction: row;
+    align-items: center;
+    gap: $links-gap;
+    justify-content: center;
     width: 100%;
-    padding-left: 3.333rem;
-    padding-bottom: 1.722rem;
+    padding-bottom: $input-padding-y;
     transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1),
       transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     will-change: opacity, transform;
@@ -460,10 +471,10 @@ const submit = async () => {
   }
 
   &__link {
-    width: 100%;
+    width: auto;
     display: inline-flex;
     align-items: center;
-    gap: 0.667rem;
+    gap: $link-inner-gap;
     font-size: 0.926rem;
     font-weight: $font-weight-medium;
     color: $color-black;
@@ -476,12 +487,12 @@ const submit = async () => {
   }
 
   &__link-icon {
-    width: 1.852rem;
-    height: 1.852rem;
+    width: math.div(1.852rem, $k);
+    height: math.div(1.852rem, $k);
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    color: $color-black;
+    color: $color-secondary;
 
     svg {
       width: 100%;
@@ -534,7 +545,7 @@ const submit = async () => {
     }
 
     .home-contacts__link-icon {
-      color: $color-white;
+      color: $color-secondary;
     }
   }
 
@@ -555,6 +566,17 @@ const submit = async () => {
 
     &__panel {
       padding: 1.111rem;
+    }
+
+    &__links {
+      gap: 0.889rem;
+      padding-bottom: $input-padding-y;
+    }
+
+    &__input,
+    &__textarea {
+      // на мобиле базовый rem уже 14px, но коэффициент 1.3 сохраняем
+      padding: math.div(1.333rem, $k) math.div(2.222rem, $k);
     }
   }
 }
