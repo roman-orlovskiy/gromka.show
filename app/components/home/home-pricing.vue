@@ -121,7 +121,7 @@ const planClasses = computed(() => {
     text-align: center;
     padding: 1.538rem; // 2rem / 1.3 ≈ 1.538rem
     width: 100%;
-    max-width: 28.718rem; // 37.333rem / 1.3 ≈ 28.718rem
+    max-width: 36rem;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -138,7 +138,7 @@ const planClasses = computed(() => {
 
   &__grid {
     width: 100%;
-    max-width: 28.718rem; // 37.333rem / 1.3 ≈ 28.718rem
+    max-width: 28rem;
     display: flex;
     flex-direction: column;
     gap: 0.769rem; // 1rem / 1.3 ≈ 0.769rem
@@ -148,7 +148,7 @@ const planClasses = computed(() => {
     position: relative;
     overflow: hidden;
     border-radius: 0.342rem; // 0.444rem / 1.3 ≈ 0.342rem
-    padding: 0.94rem 5rem 0.94rem 0.854rem; // /1.3
+    padding: 0.94rem 7rem 0.94rem 0.854rem; // /1.3
     background: $color-white-light;
     border: 1px solid rgba(44, 44, 44, 0.08);
     display: flex;
@@ -210,7 +210,7 @@ const planClasses = computed(() => {
 
   &__plan-title {
     margin: 0;
-    font-size: 1.026rem; // 1.333rem / 1.3 ≈ 1.026rem
+    font-size: 1.1rem; // 1.333rem / 1.3 ≈ 1.026rem
     font-family: $font-default;
     font-weight: $font-weight-medium;
     color: $color-black;
@@ -218,7 +218,7 @@ const planClasses = computed(() => {
   }
 
   &__plan-price {
-    font-size: 0.854rem; // 1.111rem / 1.3 ≈ 0.854rem
+    font-size: 1rem; // 1.111rem / 1.3 ≈ 0.854rem
     font-family: $font-inter;
     font-weight: $font-weight-bold;
     color: $color-primary;
@@ -231,13 +231,11 @@ const planClasses = computed(() => {
 
   &__plan-text {
     margin: 0;
-    font-size: 0.712rem; // 0.926rem / 1.3 ≈ 0.712rem
+    font-size: 0.8rem; // 0.926rem / 1.3 ≈ 0.712rem
     font-family: $font-inter;
     font-weight: $font-weight-regular;
     color: $color-gray-700;
     line-height: 1.6;
-    white-space: pre-line;
-    width: 70%;
   }
 
   &__mouse {

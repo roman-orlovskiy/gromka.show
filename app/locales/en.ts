@@ -73,12 +73,12 @@ export default {
       waves: {
         title: 'Light patterns',
         price: '20 RUB per person',
-        text: 'Light patterns\nfrom flashlights or&nbsp;screens\nbased on a pre-programmed pattern, with seat mapping in a specific venue'
+        text: 'Light patterns\nfrom flashlights or&nbsp;screens\nby&nbsp;scenario, with seat mapping in the venue'
       },
       brand: {
         title: 'Brand collaboration',
         price: '+ from 30 RUB to the plan',
-        text: 'Brand collaboration\nvia post-event engagement (chat-bot, giveaway, game, special project, exclusive content)'
+        text: 'Brand collaboration\nvia post-event engagement (chat-bot, giveaway, game)'
       }
     }
   },
