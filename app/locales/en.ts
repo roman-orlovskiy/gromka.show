@@ -26,10 +26,10 @@ export default {
       effects: 'Various flash effects',
       sync: 'Ultrasound sync'
     },
-    note: '*Optional — depends on the format.',
+    note: '*Optional — depends on the format',
     badges: {
-      noApp: 'No app. Just a browser.',
-      sync: 'Synced via ultrasound.'
+      noApp: 'No app — just a browser',
+      sync: 'Synced via ultrasound'
     },
     media: {
       ariaLabel: 'Demo video',
@@ -47,7 +47,7 @@ export default {
   benefits: {
     title: 'What do we get?',
     items: [
-      'Wow effect...',
+      'Wow effect',
       'Brand, artist advertising in audience phones',
       'Post-show quizzes and giveaways possible',
       'Any interactive mechanics'
@@ -62,9 +62,9 @@ export default {
         text: 'Flickering\nflashlights or screens\nno seat mapping and no promos'
       },
       waves: {
-        title: 'Light waves and patterns',
+        title: 'Light patterns',
         price: '20 RUB per person',
-        text: 'Light waves and patterns\nfrom flashlights or screens\nbased on a pre-programmed pattern, with seat mapping in a specific venue.'
+        text: 'Light patterns\nfrom flashlights or&nbsp;screens\nbased on a pre-programmed pattern, with seat mapping in a specific venue'
       },
       brand: {
         title: 'Brand collaboration',
@@ -90,12 +90,12 @@ export default {
       },
       description: {
         label: 'Event description',
-        placeholder: 'City, venue, date, audience, goal...'
+        placeholder: 'City, venue, date, audience, goal'
       }
     },
     submit: 'Send',
     submitPending: 'Sending...',
-    success: 'Thanks! We received your message and will get back to you soon.',
+    success: 'Thanks! We received your message and will get back to you soon',
     errors: {
       required: 'Required field',
       email: {

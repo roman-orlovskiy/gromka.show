@@ -88,3 +88,7 @@ docker compose exec app npx prisma migrate dev --name add_runner_game_settings
 15) Цвета используй из variables.scss, даже если rgba, то подставляй цвета из variables.scss
 
 16) Создавай локальные scss переменные, а не css
+
+17) В текстах в конце не ставить точку
+
+18) Все тексты в компонентах передаются через i18n

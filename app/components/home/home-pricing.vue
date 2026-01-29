@@ -10,8 +10,8 @@
           :class="planClasses[idx]"
         >
           <h3 class="home-pricing__plan-title">{{ plan.title }}</h3>
-          <div class="home-pricing__plan-price">{{ plan.price }}</div>
-          <p class="home-pricing__plan-text">{{ plan.text }}</p>
+          <div class="home-pricing__plan-price" v-html="plan.price" />
+          <p class="home-pricing__plan-text" v-html="plan.text" />
           <span class="home-pricing__plan-icon" aria-hidden="true">
             <PricingSimpleIcon
               v-if="plan.key === 'simple'"
@@ -36,6 +36,10 @@
           </span>
         </article>
       </div>
+
+      <div class="home-pricing__mouse" @click="emit('next')">
+        <img class="home-pricing__mouse-icon" :src="mouseIcon" alt="" />
+      </div>
     </div>
   </section>
 </template>
@@ -44,9 +48,14 @@
 import PricingSimpleIcon from '@/components/icons/pricing-simple-icon.vue'
 import PricingWavesIcon from '@/components/icons/pricing-waves-icon.vue'
 import PricingBrandIcon from '@/components/icons/pricing-brand-icon.vue'
+import mouseIcon from '@/assets/icons/mouse.svg'
 
 const { t } = useI18n()
 const settingsStore = useSettingsStore()
+
+const emit = defineEmits<{
+  (e: 'next'): void
+}>()
 
 const props = defineProps<{
   phase?: number
@@ -110,13 +119,13 @@ const planClasses = computed(() => {
 
   &__content {
     text-align: center;
-    padding: 2rem;
+    padding: 1.538rem; // 2rem / 1.3 ≈ 1.538rem
     width: 100%;
-    max-width: 37.333rem;
+    max-width: 28.718rem; // 37.333rem / 1.3 ≈ 28.718rem
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 2rem;
+    gap: 1.538rem; // 2rem / 1.3 ≈ 1.538rem
   }
 
   &__title {
@@ -129,22 +138,22 @@ const planClasses = computed(() => {
 
   &__grid {
     width: 100%;
-    max-width: 37.333rem;
+    max-width: 28.718rem; // 37.333rem / 1.3 ≈ 28.718rem
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 0.769rem; // 1rem / 1.3 ≈ 0.769rem
   }
 
   &__plan {
     position: relative;
     overflow: hidden;
-    border-radius: 0.444rem;
-    padding: 1.222rem 6.5rem 1.222rem 1.111rem;
+    border-radius: 0.342rem; // 0.444rem / 1.3 ≈ 0.342rem
+    padding: 0.94rem 5rem 0.94rem 0.854rem; // /1.3
     background: $color-white-light;
     border: 1px solid rgba(44, 44, 44, 0.08);
     display: flex;
     flex-direction: column;
-    gap: 0.667rem;
+    gap: 0.513rem; // 0.667rem / 1.3 ≈ 0.513rem
     text-align: left;
     transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1),
       transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
@@ -169,11 +178,11 @@ const planClasses = computed(() => {
 
   &__plan-icon {
     position: absolute;
-    right: 1.111rem;
+    right: 0.854rem; // 1.111rem / 1.3 ≈ 0.854rem
     top: 50%;
     transform: translateY(-50%);
-    width: 8.5rem;
-    height: 8.5rem;
+    width: 6.538rem; // 8.5rem / 1.3 ≈ 6.538rem
+    height: 6.538rem; // 8.5rem / 1.3 ≈ 6.538rem
     display: block;
     opacity: var(--pricing-icon-opacity);
     pointer-events: none;
@@ -201,7 +210,7 @@ const planClasses = computed(() => {
 
   &__plan-title {
     margin: 0;
-    font-size: 1.333rem;
+    font-size: 1.026rem; // 1.333rem / 1.3 ≈ 1.026rem
     font-family: $font-default;
     font-weight: $font-weight-medium;
     color: $color-black;
@@ -209,7 +218,7 @@ const planClasses = computed(() => {
   }
 
   &__plan-price {
-    font-size: 1.111rem;
+    font-size: 0.854rem; // 1.111rem / 1.3 ≈ 0.854rem
     font-family: $font-inter;
     font-weight: $font-weight-bold;
     color: $color-primary;
@@ -222,12 +231,27 @@ const planClasses = computed(() => {
 
   &__plan-text {
     margin: 0;
-    font-size: 0.926rem;
+    font-size: 0.712rem; // 0.926rem / 1.3 ≈ 0.712rem
     font-family: $font-inter;
     font-weight: $font-weight-regular;
     color: $color-gray-700;
     line-height: 1.6;
     white-space: pre-line;
+    width: 70%;
+  }
+
+  &__mouse {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  &__mouse-icon {
+    width: 3.25rem;
+    height: 3.25rem;
+    display: block;
+    filter: brightness(0) invert(1);
   }
 
   &--dark {
@@ -269,7 +293,7 @@ const planClasses = computed(() => {
   @include layout-aspect-mobile {
     &__content {
       max-width: 42rem;
-      padding: 1.333rem;
+      padding: 1.025rem; // 1.333rem / 1.3 ≈ 1.025rem
     }
 
     &__title {
@@ -277,29 +301,29 @@ const planClasses = computed(() => {
     }
 
     &__grid {
-      gap: 0.889rem;
+      gap: 0.684rem; // 0.889rem / 1.3 ≈ 0.684rem
     }
 
     &__plan {
-      padding-right: 5.25rem;
+      padding-right: 4.038rem; // 5.25rem / 1.3 ≈ 4.038rem
     }
 
     &__plan-icon {
-      right: 0.889rem;
-      width: 7rem;
-      height: 7rem;
+      right: 0.684rem; // 0.889rem / 1.3 ≈ 0.684rem
+      width: 5.385rem; // 7rem / 1.3 ≈ 5.385rem
+      height: 5.385rem; // 7rem / 1.3 ≈ 5.385rem
     }
 
     &__plan-title {
-      font-size: 1.214rem;
+      font-size: 0.934rem; // 1.214rem / 1.3 ≈ 0.934rem
     }
 
     &__plan-price {
-      font-size: 1.071rem;
+      font-size: 0.824rem; // 1.071rem / 1.3 ≈ 0.824rem
     }
 
     &__plan-text {
-      font-size: 0.929rem;
+      font-size: 0.715rem; // 0.929rem / 1.3 ≈ 0.715rem
     }
   }
 }

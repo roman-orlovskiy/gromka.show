@@ -12,7 +12,7 @@
             { 'home-benefits__item--secondary': idx === 1 }
           ]"
         >
-          {{ item }}
+          <span class="home-benefits__item-text" v-html="item" />
         </li>
       </ul>
 

@@ -202,7 +202,8 @@ const activeProps = computed(() => {
   }
   if (activeViewId.value === 'pricing') {
     return {
-      phase: pricingPhase.value
+      phase: pricingPhase.value,
+      onNext: () => { void runScroll('down') }
     }
   }
   if (activeViewId.value === 'contacts') {
