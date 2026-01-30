@@ -476,6 +476,9 @@ onBeforeUnmount(() => {
 <style lang="scss" scoped>
 @use "@/assets/scss/variables.scss" as *;
 
+$slide-nav-line-h-desktop: 0.5rem;
+$slide-nav-line-h-mobile: 4px;
+
 .page {
   width: 100%;
   height: 100%;
@@ -540,7 +543,7 @@ onBeforeUnmount(() => {
     position: absolute;
     left: 0;
     bottom: 0;
-    height: 0.444rem; /* толщина линии */
+    height: $slide-nav-line-h-desktop;
     width: calc(100% / var(--segments-count));
     background: $color-secondary;
     border-radius: 0;
@@ -548,6 +551,7 @@ onBeforeUnmount(() => {
     transform: translateX(calc(var(--active-index) * 100%));
     transition: transform var(--nav-anim-ms) cubic-bezier(0.4, 0, 0.2, 1);
     will-change: transform;
+    z-index: 2;
   }
 
   &__segment {
@@ -559,6 +563,7 @@ onBeforeUnmount(() => {
     border-radius: 0;
     position: relative;
     -webkit-tap-highlight-color: transparent;
+    z-index: 1;
 
     /* трек (неактивная часть) */
     &::before {
@@ -567,7 +572,7 @@ onBeforeUnmount(() => {
       left: 0;
       right: 0;
       bottom: 0;
-      height: 0.444rem; /* толщина линии */
+      height: $slide-nav-line-h-desktop;
       background: rgba($color-secondary, 0.22);
       border-radius: 0;
       transition: background-color 0.18s ease;
@@ -580,7 +585,7 @@ onBeforeUnmount(() => {
       right: 0;
       bottom: 0;
       width: 0.056rem; /* ~1px при 1rem=18px */
-      height: 0.444rem; /* толщина линии */
+      height: $slide-nav-line-h-desktop;
       background: rgba($color-secondary, 0.16);
       pointer-events: none;
     }
@@ -651,16 +656,16 @@ onBeforeUnmount(() => {
     &__fill {
       left: 0;
       bottom: 0;
-      height: 0.428rem;
+      height: $slide-nav-line-h-mobile;
     }
 
     &__segment::before {
-      height: 0.428rem;
+      height: $slide-nav-line-h-mobile;
     }
 
     &__segment::after {
       width: 0.071rem; /* ~1px при 1rem=14px */
-      height: 0.428rem;
+      height: $slide-nav-line-h-mobile;
     }
 
     &__label {

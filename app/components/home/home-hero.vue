@@ -1,7 +1,10 @@
 <template>
   <section class="home-hero" :class="heroClasses">
     <div class="home-hero__content">
-      <h1 class="home-hero__title" :class="titleClasses">{{ t('hero.title') }}</h1>
+      <h1 class="home-hero__title" :class="titleClasses">
+        <span class="home-hero__title-line home-hero__title-line--top">{{ heroTitleTop }}</span
+        ><span class="home-hero__title-line home-hero__title-line--bottom">{{ heroTitleBottom }}</span>
+      </h1>
 
       <div class="home-hero__text-block" :class="textBlockClasses">
         <h2 class="home-hero__subtitle">{{ t('hero.subtitle') }}</h2>
@@ -32,6 +35,10 @@ const emit = defineEmits<{
 const props = defineProps<{
   phase: number
 }>()
+
+const heroTitle = computed(() => t('hero.title'))
+const heroTitleTop = computed(() => heroTitle.value.slice(0, 3))
+const heroTitleBottom = computed(() => heroTitle.value.slice(3))
 
 const heroClasses = computed(() => ({
   'home-hero--dark': settingsStore.isDarkTheme
@@ -95,6 +102,11 @@ const mouseClasses = computed(() => ({
       transform: translateY(-3rem);
       pointer-events: none;
     }
+  }
+
+  &__title-line {
+    display: inline;
+    white-space: nowrap;
   }
 
   &__text-block {
@@ -189,16 +201,21 @@ const mouseClasses = computed(() => ({
     }
 
     &__title {
-      font-size: 7.143rem; // ~100px при базовом 14px
+      font-size: 10.5rem; // ~100px при базовом 14px
       margin: 0 0 0.889rem 0;
     }
 
+    &__title-line {
+      display: block;
+      line-height: 0.9;
+    }
+
     &__subtitle {
-      font-size: 1.286rem; // ~18px при базовом 14px
+      font-size: 1.2rem; // ~18px при базовом 14px
     }
 
     &__description {
-      font-size: 0.857rem; // ~12px при базовом 14px
+      font-size: 1rem; // ~12px при базовом 14px
       max-width: 34rem;
     }
 
