@@ -40,6 +40,11 @@ html {
   @include layout-aspect-tablet {
     font-size: 1.2vw;
   }
+
+  // Для мобильных (aspect ratio <= 10:10) — базовый rem = 14px
+  @include layout-aspect-mobile {
+    font-size: 3.5vw;
+  }
 }
 
 body {
@@ -70,6 +75,20 @@ body {
     z-index: 1;
     width: 100%;
     height: 100%;
+  }
+}
+
+@include layout-aspect-mobile {
+  // На мобильных браузерах видимая высота может отличаться от 100%/100vh
+  // (адресная строка/системные панели). Берём "small viewport" чтобы
+  // слайды гарантированно влезали без скрытого переполнения.
+  html,
+  body,
+  #__nuxt,
+  .app-root,
+  .app-root__content {
+    min-height: 100svh;
+    height: 100svh;
   }
 }
 </style>

@@ -181,6 +181,40 @@ const mouseClasses = computed(() => ({
       filter: brightness(0) invert(1);
     }
   }
+
+  @include layout-aspect-mobile {
+    &__content {
+      padding: 1.333rem;
+      gap: 0.889rem;
+    }
+
+    &__title {
+      font-size: 7.143rem; // ~100px при базовом 14px
+      margin: 0 0 0.889rem 0;
+    }
+
+    &__subtitle {
+      font-size: 1.286rem; // ~18px при базовом 14px
+    }
+
+    &__description {
+      font-size: 0.857rem; // ~12px при базовом 14px
+      max-width: 34rem;
+    }
+
+    &__button {
+      margin-top: 0.667rem;
+    }
+
+    &__mouse {
+      margin-top: 0.667rem;
+    }
+
+    &__mouse-icon {
+      width: 2.857rem; // ~40px при базовом 14px
+      height: 2.857rem;
+    }
+  }
 }
 </style>
 

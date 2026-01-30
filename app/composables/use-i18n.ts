@@ -26,7 +26,7 @@ const getUrlLanguage = (): Language | null => {
 }
 
 const getHeaderLanguage = (): Language => {
-  if (!process.server) return 'ru'
+  if (!import.meta.server) return 'ru'
   const headers = useRequestHeaders(['accept-language'])
   const accept = headers['accept-language'] || ''
   return accept.toLowerCase().startsWith('ru') ? 'ru' : 'en'
@@ -72,13 +72,17 @@ export const useI18n = (): I18nReturn => {
       return key
     }
 
-    return value.replace(/\{\{(\w+)\}\}/g, (match: string, paramKey: string) => {
+    const interpolated = value.replace(/\{\{(\w+)\}\}/g, (match: string, paramKey: string) => {
       return params[paramKey] !== undefined ? String(params[paramKey]) : match
     })
+
+    // В локалях используем `&nbsp;` для типографики, но в `{{ ... }}` HTML не парсится.
+    // Поэтому декодируем сущность в реальный неразрывный пробел, чтобы не требовать `v-html` повсюду.
+    return interpolated.replace(/&nbsp;/g, '\u00A0')
   }
 
   const updateUrlLanguage = (lang: Language): void => {
-    if (!process.client) return
+    if (!import.meta.client) return
     try {
       const url = new URL(window.location.href)
       url.searchParams.set('lang', lang)

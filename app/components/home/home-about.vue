@@ -119,5 +119,34 @@ const aboutVideoUrl = computed(() => `${GROMKA_STORAGE_BASE_URL}about-project.mp
     display: block;
     filter: brightness(0) invert(1);
   }
+
+  @include layout-aspect-mobile {
+    &__content {
+      padding: 1.333rem;
+      max-width: 42rem;
+      justify-content: center;
+      gap: 1rem;
+    }
+
+    &__title {
+      font-size: 2.143rem;
+    }
+
+    &__video-wrap {
+      max-width: 100%;
+      border-radius: 1rem;
+    }
+
+    &__description {
+      font-size: 0.857rem;
+      max-width: 100%;
+      line-height: 1.5;
+    }
+
+    &__mouse-icon {
+      width: 2.857rem;
+      height: 2.857rem;
+    }
+  }
 }
 </style>

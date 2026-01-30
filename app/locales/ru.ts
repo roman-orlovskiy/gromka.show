@@ -1,9 +1,9 @@
 export default {
   hero: {
     title: 'GROMKA',
-    subtitle: 'Платформа для перформансов',
-    description: 'Рисуйте динамические картины с помощью экранов или фонариков телефонов',
-    button: 'Что это за проект?'
+    subtitle: 'Платформа для&nbsp;перформансов',
+    description: 'Рисуйте динамические картины с&nbsp;помощью экранов или&nbsp;фонариков телефонов',
+    button: 'Что это за&nbsp;проект?'
   },
   about: {
     title: 'Что такое Gromka?',
@@ -22,14 +22,14 @@ export default {
       afterText: 'После шоу участвует в&nbsp;розыгрышах и&nbsp;получает промо от&nbsp;брендов'
     },
     stickers: {
-      browser: 'Работает в браузере',
+      browser: 'Работает в&nbsp;браузере',
       effects: 'Разные эффекты мерцания',
       sync: 'Синхронизация ультразвуком'
     },
-    note: '*Опционально — зависит от формата',
+    note: '*Опционально — зависит от&nbsp;формата',
     badges: {
-      noApp: 'Без приложения — только браузер',
-      sync: 'Синхронизация по ультразвуку'
+      noApp: 'Без&nbsp;приложения — только браузер',
+      sync: 'Синхронизация по&nbsp;ультразвуку'
     },
     media: {
       ariaLabel: 'Демо-видео',
@@ -38,9 +38,9 @@ export default {
       soundOn: 'Включить звук',
       soundOff: 'Выключить звук',
       captions: {
-        immersiveTheatre: 'Иммерсивное шоу в театре',
-        musicControl: 'Пример управления под музыку',
-        spartakScreens: 'Красно-белые экраны на Спартаке'
+        immersiveTheatre: 'Иммерсивное шоу в&nbsp;театре',
+        musicControl: 'Пример управления под&nbsp;музыку',
+        spartakScreens: 'Красно-белые экраны на&nbsp;Спартаке'
       }
     }
   },
@@ -53,7 +53,7 @@ export default {
       'Игровые механики'
     ],
     forWhom: {
-      title: 'Для кого?',
+      title: 'Для&nbsp;кого?',
       items: [
         'Организаторы событий',
         'Зрители',
@@ -68,7 +68,7 @@ export default {
       simple: {
         title: 'Простые эффекты',
         price: '10 руб с&nbsp;человека',
-        text: 'Мерцание\nфонариков или&nbsp;экранов\nбез привязки к&nbsp;местам и&nbsp;без промо'
+        text: 'Мерцание\nфонариков или&nbsp;экранов\nбез&nbsp;привязки к&nbsp;местам и&nbsp;без&nbsp;промо'
       },
       waves: {
         title: 'Световые рисунки',
@@ -87,7 +87,7 @@ export default {
     fields: {
       name: {
         label: 'Имя *',
-        placeholder: 'Как к вам обращаться'
+        placeholder: 'Как к&nbsp;вам обращаться'
       },
       email: {
         label: 'Email *',
