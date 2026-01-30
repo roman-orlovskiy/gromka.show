@@ -581,10 +581,16 @@ const submit = async () => {
 
     &__grid {
       gap: 0.889rem;
+      max-width: 100%;
     }
 
     &__panel {
       padding: 1.111rem;
+      max-width: 100%;
+    }
+
+    &__actions {
+      max-width: 100%;
     }
 
     &__links {
@@ -596,6 +602,7 @@ const submit = async () => {
     &__textarea {
       // на мобиле базовый rem уже 14px, но коэффициент 1.3 сохраняем
       padding: math.div(1.333rem, $k) math.div(2.222rem, $k);
+      font-size: $input-font * 1.2;
     }
   }
 }
