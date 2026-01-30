@@ -3,7 +3,14 @@
     <HomeSparkles :active-view-id="activeViewId" />
     <div class="page__header" aria-hidden="true" />
 
-    <div class="page__content" @wheel="handleWheel">
+    <div
+      class="page__content"
+      @wheel="handleWheel"
+      @touchstart="handleTouchStart"
+      @touchmove.prevent="handleTouchMove"
+      @touchend="handleTouchEnd"
+      @touchcancel="handleTouchCancel"
+    >
       <Transition
         :name="viewTransitionName"
         mode="out-in"
@@ -60,7 +67,7 @@ const seoKeywords = computed(() => t('seo.home.keywords'))
 
 const requestUrl = useRequestURL()
 const canonicalUrl = computed(() => `${requestUrl.origin}${requestUrl.pathname}`)
-const shareImageUrl = computed(() => `${requestUrl.origin}/images/home/spartak.webp`)
+const shareImageUrl = computed(() => `${requestUrl.origin}/favicon/web-app-manifest-512x512.png`)
 
 useHead(() => ({
   htmlAttrs: {
@@ -135,12 +142,103 @@ const handleWheel = (event: WheelEvent) => {
   void runScroll(direction)
 }
 
+type TouchState = {
+  startX: number
+  startY: number
+  lastX: number
+  lastY: number
+  startedAt: number
+  isTracking: boolean
+}
+
+const touchState = ref<TouchState>({
+  startX: 0,
+  startY: 0,
+  lastX: 0,
+  lastY: 0,
+  startedAt: 0,
+  isTracking: false
+})
+
 const isEditableTarget = (el: Element | null): boolean => {
   if (!el) return false
   const htmlEl = el as HTMLElement
   if (htmlEl.isContentEditable) return true
   const tag = el.tagName.toLowerCase()
   return tag === 'input' || tag === 'textarea' || tag === 'select'
+}
+
+const isEventOnEditable = (eventTarget: EventTarget | null): boolean => {
+  const el = eventTarget instanceof Element ? eventTarget : null
+  if (!el) return false
+  if (isEditableTarget(el)) return true
+  return !!el.closest('input, textarea, select, [contenteditable="true"]')
+}
+
+const handleTouchStart = (event: TouchEvent) => {
+  if (event.defaultPrevented) return
+  if (event.touches.length !== 1) {
+    touchState.value.isTracking = false
+    return
+  }
+
+  if (isEventOnEditable(event.target)) {
+    touchState.value.isTracking = false
+    return
+  }
+
+  const t = event.touches[0]!
+  touchState.value = {
+    startX: t.clientX,
+    startY: t.clientY,
+    lastX: t.clientX,
+    lastY: t.clientY,
+    startedAt: performance.now(),
+    isTracking: true
+  }
+}
+
+const handleTouchMove = (event: TouchEvent) => {
+  if (!touchState.value.isTracking) return
+  if (event.touches.length !== 1) return
+  if (isEventOnEditable(event.target)) return
+
+  const t = event.touches[0]!
+  touchState.value.lastX = t.clientX
+  touchState.value.lastY = t.clientY
+}
+
+const handleTouchEnd = (_event: TouchEvent) => {
+  const s = touchState.value
+  if (!s.isTracking) return
+  touchState.value.isTracking = false
+
+  const dx = s.lastX - s.startX
+  const dy = s.lastY - s.startY
+  const absX = Math.abs(dx)
+  const absY = Math.abs(dy)
+  const durationMs = performance.now() - s.startedAt
+
+  // Требуем именно вертикальный свайп (не мешаем горизонтальным, например Swiper).
+  if (absY < absX) return
+
+  // Порог: достаточно жёсткий, чтобы не срабатывать от "дрожания".
+  // Быстрый короткий свайп тоже принимаем.
+  const minDistancePx = 56
+  const quickSwipeDistancePx = 36
+  const quickSwipeMs = 220
+
+  const isDistanceOk = absY >= minDistancePx
+  const isQuickOk = absY >= quickSwipeDistancePx && durationMs <= quickSwipeMs
+  if (!isDistanceOk && !isQuickOk) return
+
+  // dy < 0 => свайп вверх => следующий слайд (down по логике навигации)
+  const direction: 'down' | 'up' = dy < 0 ? 'down' : 'up'
+  void runScroll(direction)
+}
+
+const handleTouchCancel = () => {
+  touchState.value.isTracking = false
 }
 
 const handleKeydown = (event: KeyboardEvent) => {
