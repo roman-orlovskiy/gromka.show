@@ -103,7 +103,7 @@ const aboutVideoUrl = computed(() => `${GROMKA_STORAGE_BASE_URL}about-project.mp
     color: $color-white;
     line-height: 1.6;
     width: 100%;
-    max-width: 38.564rem; // совпадает с шириной видео
+    max-width: 38.564rem;
   }
 
   &__mouse {
@@ -138,7 +138,7 @@ const aboutVideoUrl = computed(() => `${GROMKA_STORAGE_BASE_URL}about-project.mp
     }
 
     &__description {
-      font-size: 0.857rem;
+      font-size: 1.2rem;
       max-width: 100%;
       line-height: 1.5;
     }

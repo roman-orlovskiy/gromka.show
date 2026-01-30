@@ -15,8 +15,37 @@
             v-if="isWriteUsVisible"
             type="button"
             class="app-header__contact-link"
+            :aria-label="t('header.writeUs')"
             @click="handleWriteUsClick"
           >
+            <span class="app-header__contact-link-icon" aria-hidden="true">
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                focusable="false"
+                aria-hidden="true"
+              >
+                <path
+                  fill-rule="evenodd"
+                  clip-rule="evenodd"
+                  d="M5.293 15.619L15.619 5.293C16.009 4.903 16.642 4.903 17.032 5.293L18.708 6.969C19.098 7.359 19.098 7.992 18.708 8.382L8.381 18.707C8.194 18.895 7.94 19 7.675 19H5V16.325C5 16.06 5.105 15.806 5.293 15.619Z"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M13.75 7.16L16.84 10.25"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </span>
             <span class="app-header__contact-link-text">{{ t('header.writeUs') }}</span>
           </button>
         </Transition>
@@ -85,6 +114,10 @@ const rightClasses = computed(() => ({
   padding: 2rem 3rem;
   pointer-events: none;
 
+  @include layout-aspect-mobile {
+    padding: 0.667rem 0.889rem;
+  }
+
   &__inner {
     position: relative;
     width: 100%;
@@ -135,6 +168,10 @@ const rightClasses = computed(() => ({
       right: 50%;
       transform: translate3d(50%, 0, 0);
     }
+
+    @include layout-aspect-mobile {
+      gap: 1.389rem;
+    }
   }
 
   &__switcher {
@@ -162,6 +199,33 @@ const rightClasses = computed(() => ({
 
     &:hover {
       opacity: 0.75;
+    }
+
+    @include layout-aspect-mobile {
+      padding-bottom: 0.222rem;
+      padding-right: 0.222rem;
+    }
+  }
+
+  &__contact-link-icon {
+    display: none;
+    width: 1.733rem;
+    height: 1.733rem;
+
+    svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    @include layout-aspect-mobile {
+      display: inline-flex;
+    }
+  }
+
+  &__contact-link-text {
+    @include layout-aspect-mobile {
+      display: none;
     }
   }
 
