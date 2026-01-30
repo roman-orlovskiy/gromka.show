@@ -486,24 +486,24 @@ onBeforeUnmount(() => {
   position: relative;
 }
 
-// Верхний "хедер" в потоке (резервируем место под фиксированный AppHeader)
+/* Верхний "хедер" в потоке (резервируем место под фиксированный AppHeader) */
 .page__header {
   flex: 0 0 auto;
-  height: 5.333rem; // примерно: 2rem + line-height + 2rem
+  height: 5.333rem; /* примерно: 2rem + line-height + 2rem */
   position: relative;
   z-index: 10;
 }
 
-// Основной контент (flex:1) со скроллом при переполнении
+/* Основной контент (flex:1) со скроллом при переполнении */
 .page__content {
   flex: 1 1 auto;
   overflow: hidden;
-  min-height: 0; // важно для flex+overflow
+  min-height: 0; /* важно для flex+overflow */
   position: relative;
   z-index: 30;
 }
 
-// Футер в потоке: высота от контента, линия от низа 0.6rem
+/* Футер в потоке: высота от контента, линия от низа 0.6rem */
 .page__footer {
   flex: 0 0 auto;
   width: 100%;
@@ -512,13 +512,13 @@ onBeforeUnmount(() => {
   z-index: 1;
 }
 
-// Полоса переключения слайдов в стиле YouTube (на всю ширину)
+/* Полоса переключения слайдов в стиле YouTube (на всю ширину) */
 .slide-nav {
   width: 100%;
   pointer-events: auto;
   cursor: pointer;
 
-  // гарантируем pointer везде внутри полосы
+  /* гарантируем pointer везде внутри полосы */
   &,
   * {
     cursor: pointer;
@@ -531,7 +531,7 @@ onBeforeUnmount(() => {
 
   &__track {
     position: relative;
-    height: 2.6rem; // зона ховера/клика
+    height: 2.6rem; /* зона ховера/клика */
     display: flex;
     align-items: stretch;
   }
@@ -540,7 +540,7 @@ onBeforeUnmount(() => {
     position: absolute;
     left: 0;
     bottom: 0;
-    height: 0.444rem; // толщина линии
+    height: 0.444rem; /* толщина линии */
     width: calc(100% / var(--segments-count));
     background: $color-secondary;
     border-radius: 0;
@@ -560,27 +560,27 @@ onBeforeUnmount(() => {
     position: relative;
     -webkit-tap-highlight-color: transparent;
 
-    // трек (неактивная часть)
+    /* трек (неактивная часть) */
     &::before {
       content: "";
       position: absolute;
       left: 0;
       right: 0;
       bottom: 0;
-      height: 0.444rem; // толщина линии
+      height: 0.444rem; /* толщина линии */
       background: rgba($color-secondary, 0.22);
       border-radius: 0;
       transition: background-color 0.18s ease;
     }
 
-    // визуальный разделитель между сегментами (вместо gap, чтобы fill был чисто процентным)
+    /* визуальный разделитель между сегментами (вместо gap, чтобы fill был чисто процентным) */
     &::after {
       content: "";
       position: absolute;
       right: 0;
       bottom: 0;
-      width: 0.056rem; // ~1px при 1rem=18px
-      height: 0.444rem; // толщина линии
+      width: 0.056rem; /* ~1px при 1rem=18px */
+      height: 0.444rem; /* толщина линии */
       background: rgba($color-secondary, 0.16);
       pointer-events: none;
     }
@@ -594,7 +594,7 @@ onBeforeUnmount(() => {
       outline: none;
     }
 
-    // при наведении на отсек — тот же цвет (secondary), толщина не меняется
+    /* при наведении на отсек — тот же цвет (secondary), толщина не меняется */
     &:hover::before,
     &:focus-visible::before {
       background: $color-secondary;
@@ -610,7 +610,7 @@ onBeforeUnmount(() => {
   &__label {
     position: absolute;
     left: 50%;
-    // держим текст ВНУТРИ hover-зоны (внутри трека), ближе к нижней линии
+    /* держим текст ВНУТРИ hover-зоны (внутри трека), ближе к нижней линии */
     bottom: 1.6rem;
     transform: translateX(-50%) translateY(0.222rem);
     opacity: 0;
@@ -624,7 +624,7 @@ onBeforeUnmount(() => {
     color: $color-secondary;
     font-family: $font-default;
     font-weight: $font-weight-medium;
-    font-size: 0.778rem; // ~14px
+    font-size: 0.778rem; /* ~14px */
     letter-spacing: 0.02em;
     transition: opacity 0.36s ease, transform 0.36s ease, visibility 0.36s ease;
     text-shadow: 0 0.111rem 0.444rem rgba(0, 0, 0, 0.55);
@@ -659,12 +659,12 @@ onBeforeUnmount(() => {
     }
 
     &__segment::after {
-      width: 0.071rem; // ~1px при 1rem=14px
+      width: 0.071rem; /* ~1px при 1rem=14px */
       height: 0.428rem;
     }
 
     &__label {
-      font-size: 0.786rem; // ~11px при базовом 14px
+      font-size: 0.786rem; /* ~11px при базовом 14px */
       bottom: 0.535rem;
     }
   }

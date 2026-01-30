@@ -120,6 +120,11 @@
             <UiButton size="lg" class="home-contacts__submit" :disabled="isSubmitting">
               {{ isSubmitting ? t('contacts.submitPending') : t('contacts.submit') }}
             </UiButton>
+            <p
+              v-if="!isSuccess"
+              class="home-contacts__consent"
+              v-html="t('contacts.consent')"
+            />
             <p v-if="isSuccess" class="home-contacts__success">{{ t('contacts.success') }}</p>
           </div>
         </form>
@@ -443,6 +448,16 @@ const submit = async () => {
     width: 100%;
   }
 
+  &__consent {
+    margin: 0;
+    font-size: 0.778rem;
+    font-family: $font-inter;
+    font-weight: $font-weight-medium;
+    line-height: 1.25;
+    color: rgba($color-black, 0.55);
+    text-align: center;
+  }
+
   &__success {
     margin: 0;
     font-size: 0.926rem;
@@ -546,6 +561,10 @@ const submit = async () => {
 
     .home-contacts__link-icon {
       color: $color-secondary;
+    }
+
+    .home-contacts__consent {
+      color: rgba($color-white, 0.55);
     }
   }
 

@@ -105,6 +105,7 @@ export default {
     submit: 'Send',
     submitPending: 'Sending...',
     success: 'Thanks! We received your message and will get back to you soon',
+    consent: 'By clicking Send, you agree to the privacy policy',
     errors: {
       required: 'Required field',
       email: {
