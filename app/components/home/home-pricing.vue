@@ -295,7 +295,7 @@ const planClasses = computed(() => {
     }
 
     &__title {
-      font-size: 2.143rem;
+      font-size: 2.572rem; // 2.143rem * 1.2
     }
 
     &__grid {
@@ -313,15 +313,15 @@ const planClasses = computed(() => {
     }
 
     &__plan-title {
-      font-size: 0.934rem; // 1.214rem / 1.3 ≈ 0.934rem
+      font-size: 1.121rem; // 0.934rem * 1.2
     }
 
     &__plan-price {
-      font-size: 0.824rem; // 1.071rem / 1.3 ≈ 0.824rem
+      font-size: 0.989rem; // 0.824rem * 1.2
     }
 
     &__plan-text {
-      font-size: 0.715rem; // 0.929rem / 1.3 ≈ 0.715rem
+      font-size: 0.858rem; // 0.715rem * 1.2
     }
   }
 }
