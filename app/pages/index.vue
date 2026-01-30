@@ -646,6 +646,10 @@ $slide-nav-line-h-mobile: 4px;
 }
 
 @include layout-aspect-mobile {
+  .page__header {
+    height: 3.5rem;
+  }
+
   .slide-nav {
     height: 2.286rem;
 
@@ -673,6 +677,9 @@ $slide-nav-line-h-mobile: 4px;
       bottom: 0.535rem;
     }
   }
-
+  
+  .page__header {
+    height: 3.667rem;
+  }
 }
 </style>

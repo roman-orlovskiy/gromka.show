@@ -690,6 +690,22 @@ const steps: ReadonlyArray<Step> = [
       grid-template-columns: 1fr;
     }
 
+    &__stickers {
+      flex-wrap: wrap;
+    }
+
+    &__sticker {
+      font-size: 0.6; // 0.598rem * 1.3 ≈ 0.7774rem
+      white-space: normal;
+      word-break: break-word;
+      hyphens: auto;
+      line-height: 1.15;
+    }
+
+    &__step-text {
+      font-size: 1.2rem; // 0.8rem * 1.5
+    }
+
     &__nav {
       width: 3.111rem; // 43.5px при базовом 14px (моб)
       height: 3.111rem;
