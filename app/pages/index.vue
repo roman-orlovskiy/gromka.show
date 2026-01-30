@@ -50,9 +50,45 @@ import HomeContacts from '@/components/home/home-contacts.vue'
 import HomeSparkles from '@/components/home/home-sparkles.vue'
 import { delay } from '@/utils/delay'
 
-const { t } = useI18n()
+const { t, currentLang } = useI18n()
 const mainStore = useMainStore()
 const animationsStore = useAnimationsStore()
+
+const seoTitle = computed(() => t('seo.home.title'))
+const seoDescription = computed(() => t('seo.home.description'))
+const seoKeywords = computed(() => t('seo.home.keywords'))
+
+const requestUrl = useRequestURL()
+const canonicalUrl = computed(() => `${requestUrl.origin}${requestUrl.pathname}`)
+const shareImageUrl = computed(() => `${requestUrl.origin}/images/home/spartak.webp`)
+
+useHead(() => ({
+  htmlAttrs: {
+    lang: currentLang.value
+  },
+  link: [
+    { rel: 'canonical', href: canonicalUrl.value }
+  ]
+}))
+
+useSeoMeta({
+  title: seoTitle,
+  description: seoDescription,
+  keywords: seoKeywords,
+  robots: 'index, follow',
+
+  ogTitle: seoTitle,
+  ogDescription: seoDescription,
+  ogType: 'website',
+  ogSiteName: 'GROMKA.show',
+  ogUrl: canonicalUrl,
+  ogImage: shareImageUrl,
+
+  twitterCard: 'summary_large_image',
+  twitterTitle: seoTitle,
+  twitterDescription: seoDescription,
+  twitterImage: shareImageUrl
+})
 
 const viewOrder = ['hero', 'about', 'howItWorks', 'benefits', 'pricing', 'contacts'] as const
 type ViewId = (typeof viewOrder)[number]

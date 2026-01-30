@@ -1,4 +1,11 @@
 export default {
+  seo: {
+    home: {
+      title: 'GROMKA.SHOW — Draw dynamic pictures using screens or&nbsp;phone flashlights',
+      description: 'A platform for creating dynamic pictures using flashlights and&nbsp;smartphone screens of&nbsp;the audience',
+      keywords: 'Gromka show, GROMKA.show, interactive show, interactive light show, dynamic pictures, light patterns, phone flashlights, smartphone screens, audience participation, crowd choreography, event technology, event tech, immersive show, concert visuals, stadium show, theatre performance, brand activation, post-event promo, giveaway, chat-bot'
+    }
+  },
   hero: {
     title: 'GROMKA',
     subtitle: 'Platform for&nbsp;Performances',
