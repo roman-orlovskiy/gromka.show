@@ -220,8 +220,10 @@ const rowClasses = computed(() =>
     }
 
     &__titles {
-      justify-content: flex-start;
+      justify-content: center;
       gap: 1rem;
+      text-align: center;
+      margin-bottom: 3rem;
     }
 
     &__title {
@@ -229,7 +231,7 @@ const rowClasses = computed(() =>
     }
 
     &__line {
-      font-size: 0.733rem;
+      font-size: 1.2rem;
     }
 
     &__line-text {
