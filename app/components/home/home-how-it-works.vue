@@ -186,9 +186,9 @@ type VideoSlide = {
 }
 
 const slides = computed<ReadonlyArray<VideoSlide>>(() => ([
-  { url: `${GROMKA_STORAGE_BASE_URL}how-it-works-1.mp4`, captionKey: 'howItWorks.media.captions.immersiveTheatre' },
-  { url: `${GROMKA_STORAGE_BASE_URL}how-it-works-2.mp4`, captionKey: 'howItWorks.media.captions.musicControl' },
-  { url: `${GROMKA_STORAGE_BASE_URL}how-it-works-3.mp4`, captionKey: 'howItWorks.media.captions.spartakScreens' }
+  { url: `${GROMKA_STORAGE_BASE_URL}video/how-it-works-1.mp4`, captionKey: 'howItWorks.media.captions.immersiveTheatre' },
+  { url: `${GROMKA_STORAGE_BASE_URL}video/how-it-works-2.mp4`, captionKey: 'howItWorks.media.captions.musicControl' },
+  { url: `${GROMKA_STORAGE_BASE_URL}video/how-it-works-3.mp4`, captionKey: 'howItWorks.media.captions.spartakScreens' }
 ]))
 
 const swiperModules = [Navigation]

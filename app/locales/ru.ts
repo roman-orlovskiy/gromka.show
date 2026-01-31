@@ -133,5 +133,22 @@ export default {
   },
   header: {
     writeUs: 'Написать нам'
+  },
+  svetlo: {
+    brand: 'GROMKA',
+    deviceIdPrefix: 'ID:',
+    start: 'НАЧАТЬ',
+    permissionsHint: 'Разрешите микрофон и&nbsp;камеру',
+    flashlightNotSupportedNote: '*&nbsp;Фонарик не поддерживается, мерцайте экраном',
+    qrPlaceholder: 'Откройте gromka.show/svetlo на&nbsp;другом устройстве',
+    modes: {
+      svetloLine1: 'SVETLO',
+      svetloLine2: 'ФОНАРИКИ',
+      cvetnoLine1: 'CVETNO',
+      cvetnoLine2: 'ЭКРАНЫ'
+    },
+    units: {
+      khz: 'кГц'
+    }
   }
 }

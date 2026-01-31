@@ -12,6 +12,10 @@ export const useMainStore = defineStore('main', () => {
 
   const isModalOpen: ComputedRef<boolean> = computed(() => modalType.value !== null)
 
+  // Svetlo: состояние света (фонарик/экран)
+  // null = не инициализировано, true/false = текущее состояние
+  const isLightOn: Ref<boolean | null> = ref(null)
+
   const openModal = (type: string, params: ModalParams = {}): void => {
     console.log('openModal', type)
     modalType.value = type
@@ -43,6 +47,7 @@ export const useMainStore = defineStore('main', () => {
     modalType,
     modalParams,
     isModalOpen,
+    isLightOn,
     openModal,
     closeModal,
     activeViewId,

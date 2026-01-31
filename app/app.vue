@@ -1,8 +1,8 @@
 <template>
   <div class="app-root">
     <NuxtRouteAnnouncer />
-    <AppBackground />
-    <AppHeader />
+    <AppBackground v-if="!isSvetloPage" />
+    <AppHeader v-if="!isSvetloPage" />
     <div class="app-root__content">
       <NuxtPage />
     </div>
@@ -13,7 +13,10 @@
 import AppBackground from '@/components/app-background.vue'
 import AppHeader from '@/components/app-header.vue'
 
+const route = useRoute()
 const settingsStore = useSettingsStore()
+
+const isSvetloPage = computed(() => route.path === '/svetlo')
 
 onMounted(() => {
   setTimeout(() => {

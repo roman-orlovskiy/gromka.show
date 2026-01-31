@@ -36,7 +36,7 @@ const emit = defineEmits<{
   (e: 'next'): void
 }>()
 
-const aboutVideoUrl = computed(() => `${GROMKA_STORAGE_BASE_URL}about-project.mp4`)
+const aboutVideoUrl = computed(() => `${GROMKA_STORAGE_BASE_URL}video/about-project.mp4`)
 </script>
 
 <style lang="scss" scoped>
