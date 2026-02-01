@@ -11,9 +11,8 @@ services:
       - gromka_db_prod:/var/lib/postgresql/data
 
   app:
-    build:
-      context: .
-      dockerfile: docker/Dockerfile.prod
+    image: gromka-show-app:prod
+    pull_policy: never
     environment:
       DATABASE_URL: postgresql://postgres:postgres@db:5432/gromka?schema=public
     ports:
